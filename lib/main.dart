@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_and_go/screen/Regster1.dart';
 import 'package:go_and_go/screen/Regster2.dart';
+import 'package:go_and_go/screen/Regster3.dart';
 import 'package:go_and_go/screen/splash_screen.dart';
 import 'package:go_and_go/screen/startScreen.dart';
 
@@ -17,10 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Inetum Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: resgstertwo(),
+      home: regsterthree(),
     );
   }
 }

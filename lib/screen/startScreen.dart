@@ -50,7 +50,7 @@ class _startScreenState extends State<startScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: "Go&GO",
+                          text: "Go&Go",
                           style: TextStyle(
                             color: Color(0xFFF04641), // Couleur rouge pour "Go"
                           ),
