@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_and_go/screen/Regster1.dart';
+import 'package:go_and_go/screen/Regster2.dart';
 import 'package:go_and_go/screen/splash_screen.dart';
 import 'package:go_and_go/screen/startScreen.dart';
 
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: startScreen(),
+      home: resgstertwo(),
     );
   }
 }
