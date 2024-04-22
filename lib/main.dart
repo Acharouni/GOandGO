@@ -9,6 +9,7 @@ import 'package:go_and_go/screen/groupe.dart';
 import 'package:go_and_go/screen/home.dart';
 import 'package:go_and_go/screen/login.dart';
 import 'package:go_and_go/screen/parametres.dart';
+import 'package:go_and_go/screen/savelife.dart';
 import 'package:go_and_go/screen/splash_screen.dart';
 import 'package:go_and_go/screen/startScreen.dart';
 import 'package:go_and_go/screen/test.dart';
@@ -29,12 +30,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: startScreen(),
+      home: home(),
       routes: {
         '/home': (context) => home(),
         '/addtrajet': (context) => addtrajet(),
         '/groupe': (context) => groupe(),
         '/parametres': (context) => parametres(),
+        '/savelive': (context) => savelife(),
+        '/chat1': (context) => chat1(),
       },
     );
   }

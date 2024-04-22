@@ -32,7 +32,7 @@ class _groupeState extends State<groupe> {
         Navigator.pushReplacementNamed(context, '/groupe');
         break;
       case 3:
-        Navigator.pushReplacementNamed(context, '/parametres');
+        Navigator.pushNamed(context, '/parametres');
         break;
     }
   }
@@ -74,19 +74,41 @@ class _groupeState extends State<groupe> {
             Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'assets/img/leaf.png',
-                      width: 35,
-                      height: 39,
-                      fit: BoxFit.contain, // Choose a fit option
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed('/savelive');
+                      },
+                      child: Container(
+                        width: 35,
+                        height: 39,
+                        decoration: BoxDecoration(
+                          // Définir la décoration de votre premier conteneur ici
+                        ),
+                        child: Image.asset(
+                          'assets/img/leaf.png',
+                          width: 35,
+                          height: 39,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
-                    SizedBox(width: 235),
-                    Image.asset(
-                      'assets/img/arcticons_verizon-messages.png',
-                      width: 48,
-                      height: 48,
-                      fit: BoxFit.contain, // Choose a fit option
+                    SizedBox(width: 235), // Espace entre les deux images
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushReplacementNamed('/chat1');
+                        // Mettez votre logique de navigation ici
+                      },
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        child: Image.asset(
+                          'assets/img/arcticons_verizon-messages.png',
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   ],
                 )

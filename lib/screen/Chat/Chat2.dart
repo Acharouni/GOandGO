@@ -3,7 +3,6 @@ import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/io.dart';
-import '../../NavBar/nav_model.dart';
 
 class chat2 extends StatefulWidget {
   const chat2({Key? key}) : super(key: key);
@@ -13,12 +12,6 @@ class chat2 extends StatefulWidget {
 }
 
 class _chat2State extends State<chat2> {
-  final homeNavKey = GlobalKey<NavigatorState>();
-  final searchNavKey = GlobalKey<NavigatorState>();
-  final notificationNavKey = GlobalKey<NavigatorState>();
-  final profileNavKey = GlobalKey<NavigatorState>();
-  List<NavModel> items = [];
-  int selectedTab = 0;
 
   late IOWebSocketChannel channel; //channel variable for websocket
   late bool connected;
@@ -36,24 +29,6 @@ class _chat2State extends State<chat2> {
     msgtext.text = "";
     channelconnect();
     super.initState();
-    items = [
-      NavModel(
-        page: const TabPage(tab: 1),
-        navKey: homeNavKey,
-      ),
-      NavModel(
-        page: const TabPage(tab: 2),
-        navKey: searchNavKey,
-      ),
-      NavModel(
-        page: const TabPage(tab: 3),
-        navKey: notificationNavKey,
-      ),
-      NavModel(
-        page: const TabPage(tab: 4),
-        navKey: profileNavKey,
-      ),
-    ];
   }
   channelconnect() {
     //function to connect
@@ -281,36 +256,6 @@ class _chat2State extends State<chat2> {
   }
 }
 
-class TabPage extends StatelessWidget {
-  final int tab;
-
-  const TabPage({Key? key, required this.tab}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Tab $tab')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Tab $tab'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>  const chat2(),
-                  ),
-                );
-              },
-              child: const Text('Go to page'),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 class MessageData {
   //message data model
   String msgtext, userid;
