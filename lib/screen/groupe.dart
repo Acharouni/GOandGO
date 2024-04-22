@@ -32,7 +32,7 @@ class _groupeState extends State<groupe> {
         Navigator.pushReplacementNamed(context, '/groupe');
         break;
       case 3:
-        Navigator.pushNamed(context, '/parametres');
+        Navigator.pushReplacementNamed(context, '/parametres');
         break;
     }
   }

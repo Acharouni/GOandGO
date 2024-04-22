@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_and_go/screen/Regster2.dart';
+
+import 'home.dart';
 
 class regsterthree extends StatefulWidget {
   const regsterthree({Key? key}) : super(key: key);
@@ -127,7 +131,7 @@ class _regsterthreeState extends State<regsterthree> {
                             text: "Acceptez-vous le live",
                           ),
                           TextSpan(
-                            text: "Tacking ",
+                            text: " Tacking ",
                             style: TextStyle(
                               color: Color(0xFFF04641), // Couleur rouge pour "Go"
                             ),
@@ -141,40 +145,71 @@ class _regsterthreeState extends State<regsterthree> {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              Column(
-                children: [
-                  Column(
-                    children: [
-                      ListTile(
-                        title: const Text("Oui"),
-                        leading: Radio(
-                          value: optionsV[0],
-                          groupValue: currentOptions,
-                          onChanged: (value){
-                            setState(() {
-                              currentOptions=value.toString();
-                            });
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: const Text("Non"),
-                        leading: Radio(
-                          value: optionsV[1],
-                          groupValue: currentOptions,
-                          onChanged: (value){
-                            setState(() {
-                              currentOptions=value.toString();
-                            });
-                          },
-                        ),
-                      ),
 
-                    ],
-                  )
-                ],
+              Center(
+                child: Column(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          width: 150, // Définir la largeur du conteneur du Radio
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: const Text("Oui",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                leading: Container(
+                                  // Définir la hauteur du conteneur du Radio
+                                  child: Radio(
+                                    value: optionsV[0],
+                                    groupValue: currentOptions,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        currentOptions = value.toString();
+                                      });
+                                    },
+                                    materialTapTargetSize: MaterialTapTargetSize
+                                        .shrinkWrap, // Réduit la taille du Radio
+                                  ),
+                                ),
+
+                              ),
+                              ListTile(
+
+                                title: const Text(
+                                  "Non",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                leading: Container(
+
+                                  child: Radio(
+                                    value: optionsV[1],
+                                    groupValue: currentOptions,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        currentOptions = value.toString();
+                                      });
+                                    },
+                                    materialTapTargetSize: MaterialTapTargetSize
+                                        .shrinkWrap, // Réduit la taille du Radio
+                                  ),
+                                ),
+
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -199,11 +234,11 @@ class _regsterthreeState extends State<regsterthree> {
                       ),
                       onPressed: () {
                         // Action à exécuter lorsque le bouton "Skip" est pressé
-                        print('Skip button pressed');
+                        Get.offAll(resgstertwo());
                       },
                       child: Center(
                         child: Text(
-                          'Skip',
+                          'Précé',
                           style: TextStyle(
                             fontSize: 16,
                             shadows: [
@@ -241,7 +276,7 @@ class _regsterthreeState extends State<regsterthree> {
                       ),
                       onPressed: () {
                         // Action à exécuter lorsque le bouton "Commencer" est pressé
-                        print('Commencer button pressed');
+                        Get.offAll(home());
                       },
                       child: Center(
                         child: Text(

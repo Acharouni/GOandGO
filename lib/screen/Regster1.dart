@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_and_go/screen/home.dart';
+
+import 'Regster2.dart';
+import 'home.dart';
 class regseterone extends StatefulWidget {
   const regseterone({Key? key}) : super(key: key);
 
@@ -70,41 +72,71 @@ class _regseteroneState extends State<regseterone> {
               ],
             ),
             SizedBox(height: 25),
-            Column(
+          Center(
+            child: Column(
               children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ListTile(
-                    title: const Text("Oui"),
-                    leading: Radio(
-                      value: optionsV[0],
-                      groupValue: currentOptions,
-                      onChanged: (value){
-                        setState(() {
-                          currentOptions=value.toString();
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text("Non"),
-                    leading: Radio(
-                      value: optionsV[1],
-                      groupValue: currentOptions,
-                      onChanged: (value){
-                        setState(() {
-                          currentOptions=value.toString();
-                        });
-                      },
-                    ),
-                  ),
+                Column(
+                  children: [
+                    Container(
+                      width: 150, // Définir la largeur du conteneur du Radio
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: const Text("Oui",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            leading: Container(
+                              // Définir la hauteur du conteneur du Radio
+                              child: Radio(
+                                value: optionsV[0],
+                                groupValue: currentOptions,
+                                onChanged: (value) {
+                                  setState(() {
+                                    currentOptions = value.toString();
+                                  });
+                                },
+                                materialTapTargetSize: MaterialTapTargetSize
+                                    .shrinkWrap, // Réduit la taille du Radio
+                              ),
+                            ),
 
-                ],
-              )
+                          ),
+                          ListTile(
+
+                            title: const Text(
+                              "Non",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            leading: Container(
+
+                              child: Radio(
+                                value: optionsV[1],
+                                groupValue: currentOptions,
+                                onChanged: (value) {
+                                  setState(() {
+                                    currentOptions = value.toString();
+                                  });
+                                },
+                                materialTapTargetSize: MaterialTapTargetSize
+                                    .shrinkWrap, // Réduit la taille du Radio
+                              ),
+                            ),
+
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-            SizedBox(height: 40),
+          ),
+
+            SizedBox(height: 150),
         Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -171,7 +203,7 @@ class _regseteroneState extends State<regseterone> {
                     ),
                     onPressed: () {
                       // Action à exécuter lorsque le bouton "Commencer" est pressé
-                      print('Commencer button pressed');
+                      Get.offAll(resgstertwo());
                     },
                     child: Center(
                       child: Text(

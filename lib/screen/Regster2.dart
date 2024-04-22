@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_and_go/screen/Regster1.dart';
+
+import 'Regster3.dart';
+import 'home.dart';
 
 
 class resgstertwo extends StatefulWidget {
@@ -228,11 +233,11 @@ class _resgstertwoState extends State<resgstertwo> {
                     ),
                     onPressed: () {
                       // Action à exécuter lorsque le bouton "Skip" est pressé
-                      print('Skip button pressed');
+                      Get.offAll(regseterone());
                     },
                     child: Center(
                       child: Text(
-                        'Skip',
+                        'Précé',
                         style: TextStyle(
                           fontSize: 16,
                           shadows: [
@@ -270,7 +275,7 @@ class _resgstertwoState extends State<resgstertwo> {
                     ),
                     onPressed: () {
                       // Action à exécuter lorsque le bouton "Commencer" est pressé
-                      print('Commencer button pressed');
+                      Get.offAll(regsterthree());
                     },
                     child: Center(
                       child: Text(

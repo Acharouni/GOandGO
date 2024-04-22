@@ -158,8 +158,8 @@ class _parametresState extends State<parametres> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFF005573), Color(0xFF00AA9B)],
-                  begin: Alignment.center,
-                  end: Alignment.topLeft,
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
                 ),
                 borderRadius: BorderRadius.circular(30.0),
               ),
@@ -177,7 +177,175 @@ class _parametresState extends State<parametres> {
                 },
                 child: Center(
                   child: Text(
-                    'Suivant',
+                    'Profile',
+                    style: TextStyle(
+                      fontSize: 16,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black38,
+                          offset: Offset(-5.0, 5.0),
+                        ),
+                      ],
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            Container(
+              width: 240,
+              height: 41,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF005573), Color(0xFF00AA9B)],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent, // Rendre la couleur de fond transparente
+                  onPrimary: Colors.white, // Couleur du texte
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                onPressed: () {
+                  // Action à exécuter lorsque le bouton "Commencer" est pressé
+                  print('Commencer button pressed');
+                },
+                child: Center(
+                  child: Text(
+                    'Véhicules',
+                    style: TextStyle(
+                      fontSize: 16,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black38,
+                          offset: Offset(-5.0, 5.0),
+                        ),
+                      ],
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            Container(
+              width: 240,
+              height: 41,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF005573), Color(0xFF00AA9B)],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent, // Rendre la couleur de fond transparente
+                  onPrimary: Colors.white, // Couleur du texte
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                onPressed: () {
+                  // Action à exécuter lorsque le bouton "Commencer" est pressé
+                  print('Commencer button pressed');
+                },
+                child: Center(
+                  child: Text(
+                    'Historique',
+                    style: TextStyle(
+                      fontSize: 16,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black38,
+                          offset: Offset(-5.0, 5.0),
+                        ),
+                      ],
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            Container(
+              width: 240,
+              height: 41,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF005573), Color(0xFF00AA9B)],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent, // Rendre la couleur de fond transparente
+                  onPrimary: Colors.white, // Couleur du texte
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                onPressed: () {
+                  // Action à exécuter lorsque le bouton "Commencer" est pressé
+                  print('Commencer button pressed');
+                },
+                child: Center(
+                  child: Text(
+                    'Langue',
+                    style: TextStyle(
+                      fontSize: 16,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black38,
+                          offset: Offset(-5.0, 5.0),
+                        ),
+                      ],
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30),
+            Container(
+              width: 240,
+              height: 41,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF005573), Color(0xFF00AA9B)],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent, // Rendre la couleur de fond transparente
+                  onPrimary: Colors.white, // Couleur du texte
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                onPressed: () {
+                  // Action à exécuter lorsque le bouton "Commencer" est pressé
+                  print('Commencer button pressed');
+                },
+                child: Center(
+                  child: Text(
+                    'About',
                     style: TextStyle(
                       fontSize: 16,
                       shadows: [

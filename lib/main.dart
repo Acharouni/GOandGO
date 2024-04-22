@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: home(),
+      home: resgstertwo(),
       routes: {
         '/home': (context) => home(),
         '/addtrajet': (context) => addtrajet(),
