@@ -121,17 +121,17 @@ class _loginScreenState extends State<loginScreen> {
                             ),
                             borderRadius: BorderRadius.circular(30.0),
                           ),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.transparent, // Rendre la couleur de fond transparente
-                            onPrimary: Colors.white, // Couleur du texte
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.transparent, // Rendre la couleur de fond transparente
+                              onPrimary: Colors.white, // Couleur du texte
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
                             ),
-                          ),
-                          onPressed: () {
-                            // Actions à exécuter lorsque le bouton est pressé
-                          },
+                            onPressed: () {
+                              // Actions à exécuter lorsque le bouton est pressé
+                            },
 
                             child: Center(
                               child: Text(

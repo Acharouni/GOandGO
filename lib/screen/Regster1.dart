@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_and_go/screen/home.dart';
 class regseterone extends StatefulWidget {
   const regseterone({Key? key}) : super(key: key);
 
@@ -71,6 +73,7 @@ class _regseteroneState extends State<regseterone> {
             Column(
               children: [
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ListTile(
                     title: const Text("Oui"),
@@ -124,9 +127,9 @@ class _regseteroneState extends State<regseterone> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () {Get.offAll(home());
                       // Action à exécuter lorsque le bouton "Skip" est pressé
-                      print('Skip button pressed');
+
                     },
                     child: Center(
                       child: Text(

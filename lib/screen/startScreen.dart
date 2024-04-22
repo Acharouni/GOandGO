@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'Regster1.dart';
+import 'home.dart';
+
 
 class startScreen extends StatefulWidget {
   const startScreen({Key? key}) : super(key: key);
@@ -88,7 +93,7 @@ class _startScreenState extends State<startScreen> {
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () {Get.offAll(regseterone());
                         // Actions à exécuter lorsque le bouton est pressé
                       },
 

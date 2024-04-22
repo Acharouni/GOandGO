@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_and_go/screen/Addtrajet.dart';
 import 'package:go_and_go/screen/Regster1.dart';
 import 'package:go_and_go/screen/Regster2.dart';
 import 'package:go_and_go/screen/Regster3.dart';
+import 'package:go_and_go/screen/Chat/chat1.dart';
+import 'package:go_and_go/screen/groupe.dart';
+import 'package:go_and_go/screen/home.dart';
+import 'package:go_and_go/screen/login.dart';
+import 'package:go_and_go/screen/parametres.dart';
 import 'package:go_and_go/screen/splash_screen.dart';
 import 'package:go_and_go/screen/startScreen.dart';
+import 'package:go_and_go/screen/test.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,13 +23,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Inetum Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      home: regsterthree(),
+      home: startScreen(),
+      routes: {
+        '/home': (context) => home(),
+        '/addtrajet': (context) => addtrajet(),
+        '/groupe': (context) => groupe(),
+        '/parametres': (context) => parametres(),
+      },
     );
   }
 }
