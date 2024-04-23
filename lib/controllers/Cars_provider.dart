@@ -1,32 +1,26 @@
-/*import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jobscout/models/request/auth/signup_model.dart';
-import 'package:jobscout/services/helpers/auth_helper.dart';
-import 'package:jobscout/views/common/exports.dart';
-import 'package:jobscout/views/ui/auth/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/request/car_model.dart';
+import '../models/response/Car_Modelresp.dart';
+
+import '../services/helpers/car_helper.dart';
 
 class CarNotifier extends ChangeNotifier {
-    bool _obscureText = true;
 
-    bool get obscureText => _obscureText;
+   late Future<List<CarModelResp>> caruser;
 
-    set obscureText(bool newState) {
-        _obscureText = newState;
-        notifyListeners();
-    }
+    List<CarModelReq> _cars = [];
+    List<CarModelReq> get cars => _cars;
 
-    bool NserieValidator(String password) {
-        if (password.isEmpty) return false;
-        String pattern =
-            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-        RegExp regex = RegExp(pattern);
-        return regex.hasMatch(password);
-    }
-
-    final signupFormKey = GlobalKey<FormState>();
+    final CarFormKey = GlobalKey<FormState>();
 
     bool validateAndSave() {
-        final form = signupFormKey.currentState;
+        final form = CarFormKey.currentState;
 
         if (form!.validate()) {
             form.save();
@@ -35,18 +29,27 @@ class CarNotifier extends ChangeNotifier {
             return false;
         }
     }
+  addCar(CarModelReq model) {
+    CarHelper.addCar(model).then((response) {
+      if (response==200) {
+        Get.snackbar(
+            "car successfully added", "Please Check your bookmarks",
+      
+            icon: const Icon(Icons.bookmark_add));
+      } else if (response!=200) {
+        Get.snackbar("Failed to add Bookmarks", "Please try again",
 
-    upSignup(SignupModel model) {
-        AuthHelper.signup(model).then((response) {
-            if (response) {
-                Get.offAll(() => const LoginPage(),
-                    transition: Transition.fade, duration: const Duration(seconds: 2));
-            } else {
-                Get.snackbar("Sign up Failed", "Please Check your credentials",
-                    colorText: Color(kLight.value),
-                    backgroundColor: Colors.red,
-                    icon: const Icon(Icons.add_alert));
-            }
-        });
-    }
-}*/
+            backgroundColor: Colors.red,
+            icon: const Icon(Icons.bookmark_add));
+      }
+    });
+  }
+
+ getCar() {
+    caruser = CarHelper.getCars() as Future<List<CarModelResp>>;
+  }
+
+}
+
+
+

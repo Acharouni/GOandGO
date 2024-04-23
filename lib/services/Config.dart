@@ -9,6 +9,9 @@ class Config {
   static const String getSelectedDemand = "/demand/getSelectedDemand/";
   static const String getAllDemandsForTheRideCreator = "/demand/getAllDemandsForTheRideCreator/";
 
+  static const String addCar = "/cars";
+  static const String getCar = "/Car";
+
 
   static const String addMessage = "/message/add/";
   static const String getAllMessagesForThatConversation = "/message/get/";

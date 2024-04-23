@@ -30,7 +30,7 @@ class AuthHelper {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       String token = loginResponseModelFromJson(response.body).jwtToken;
-      
+      print(token);
 
       await prefs.setString('token', token);
    

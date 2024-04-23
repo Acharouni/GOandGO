@@ -12,12 +12,12 @@ import 'package:go_and_go/screen/parametres.dart';
 import 'package:go_and_go/screen/savelife.dart';
 import 'package:go_and_go/screen/splash_screen.dart';
 import 'package:go_and_go/screen/startScreen.dart';
-import 'package:go_and_go/screen/test.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+
+import 'controllers/Cars_provider.dart';
 import 'controllers/login_provider.dart';
- Widget defaultHome = const resgstertwo();
+ Widget defaultHome = const splashScreen();
 
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +33,8 @@ void main() async {
     //}
   runApp(MultiProvider(
     providers: [
-     
       ChangeNotifierProvider(create: (context) => LoginNotifier()),
+      ChangeNotifierProvider(create: (context) => CarNotifier()),
     ],
     child: const MyApp(),
   ));

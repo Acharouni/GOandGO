@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
+import 'Regster2.dart';
+
 
 class home extends StatefulWidget {
   const home({Key? key}) : super(key: key);
@@ -259,7 +261,7 @@ class _homeState extends State<home> {
         child: FloatingActionButton(
           backgroundColor: Colors.white.withOpacity(0.5),
           elevation: 0,
-          onPressed: () => debugPrint("Add Button pressed"),
+          onPressed: () => Get.offAll(resgstertwo()),
           shape: StarBorder.polygon(
             sides: 6,
             side: const BorderSide(width: 2, color: Colors.white),
