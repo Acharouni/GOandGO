@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 LoginResponseModel loginResponseModelFromJson(String str) =>
     LoginResponseModel.fromJson(json.decode(str));
 
@@ -7,26 +9,24 @@ String loginResponseModelToJson(LoginResponseModel data) =>
     json.encode(data.toJson());
 
 class LoginResponseModel {
-  final String id;
-  final String profile;
-  final String userToken;
+
+  final String jwtToken;
 
   LoginResponseModel({
-    required this.id,
-    required this.profile,
-    required this.userToken,
+
+    required this.jwtToken,
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
       LoginResponseModel(
-        id: json["_id"],
-        profile: json["profile"],
-        userToken: json["userToken"],
+
+        jwtToken: json["jwtToken"],
+
       );
 
   Map<String, dynamic> toJson() => {
-    "_id": id,
-    "profile": profile,
-    "userToken": userToken,
+
+    "jwtToken": jwtToken,
   };
+
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_and_go/screen/Regster2.dart';
+import 'package:go_and_go/screen/login.dart';
 
 import 'Regster1.dart';
 import 'home.dart';

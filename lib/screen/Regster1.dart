@@ -145,48 +145,6 @@ class _regseteroneState extends State<regseterone> {
                   height: 48,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFFFF52), Color(0xFF7400)],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                    ),// Couleur de fond du bouton "Skip"
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent, // Rendre la couleur de fond transparente
-                      onPrimary: Color(0xFFF00AA9B), // Couleur du texte
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    onPressed: () {Get.offAll(home());
-                      // Action à exécuter lorsque le bouton "Skip" est pressé
-
-                    },
-                    child: Center(
-                      child: Text(
-                        'Skip',
-                        style: TextStyle(
-                          fontSize: 16,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 10.0,
-                              color: Colors.black38,
-                              offset: Offset(-5.0, 5.0),
-                            ),
-                          ],
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width:110, height: 16), // Espacement entre les boutons
-                Container(
-                  width: 120,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
                       colors: [Color(0xFF005573), Color(0xFF00AA9B)],
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
@@ -202,8 +160,13 @@ class _regseteroneState extends State<regseterone> {
                       ),
                     ),
                     onPressed: () {
-                      // Action à exécuter lorsque le bouton "Commencer" est pressé
-                      Get.offAll(resgstertwo());
+                      if (currentOptions == optionsV[0]) {
+                        // If "Oui" is selected
+                        Get.offAll(resgstertwo());
+                      } else {
+                        // If "Non" is selected
+                        Get.offAll(home());
+                      }
                     },
                     child: Center(
                       child: Text(
@@ -223,6 +186,8 @@ class _regseteroneState extends State<regseterone> {
                     ),
                   ),
                 ),
+                SizedBox(height: 16), // Espacement entre les boutons
+
               ],
             ),
           ],

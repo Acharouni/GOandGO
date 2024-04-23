@@ -1,32 +1,26 @@
+
 import 'dart:convert';
 
-LoginResponseModel loginResponseModelFromJson(String str) =>
-    LoginResponseModel.fromJson(json.decode(str));
+LoginModelReq loginModelReqFromJson(String str) => LoginModelReq.fromJson(json.decode(str));
 
-String loginResponseModelToJson(LoginResponseModel data) =>
-    json.encode(data.toJson());
+String loginModelReqToJson(LoginModelReq data) => json.encode(data.toJson());
 
-class LoginResponseModel {
-  final String id;
-  final String profile;
-  final String userToken;
+class LoginModelReq {
+    final String email;
+    final String mdp;
 
-  LoginResponseModel({
-    required this.id,
-    required this.profile,
-    required this.userToken,
-  });
+    LoginModelReq({
+        required this.email,
+        required this.mdp,
+    });
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
-      LoginResponseModel(
-        id: json["_id"],
-        profile: json["profile"],
-        userToken: json["userToken"],
-      );
+    factory LoginModelReq.fromJson(Map<String, dynamic> json) => LoginModelReq(
+        email: json["email"],
+        mdp: json["mdp"],
+    );
 
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "profile": profile,
-    "userToken": userToken,
-  };
+    Map<String, dynamic> toJson() => {
+        "email": email,
+        "mdp": mdp,
+    };
 }

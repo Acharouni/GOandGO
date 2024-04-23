@@ -158,7 +158,7 @@ class _resgstertwoState extends State<resgstertwo> {
                       return null;
                     },
                     decoration: InputDecoration(
-                      hintText: "Énergie",
+                      hintText: "Emission de CO2",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -170,7 +170,7 @@ class _resgstertwoState extends State<resgstertwo> {
                         borderRadius: BorderRadius.circular(60),
                         borderSide: BorderSide(color: Color(0xFFFCFFFD), width: 2),
                       ),
-                      prefixIcon: Icon(Icons.local_gas_station_sharp, color: Colors.grey),
+                      prefixIcon: Icon(Icons.co2, color: Colors.grey),
                     ),
                   ),
                 ),
@@ -203,7 +203,7 @@ class _resgstertwoState extends State<resgstertwo> {
                         borderRadius: BorderRadius.circular(60),
                         borderSide: BorderSide(color: Color(0xFFFCFFFD), width: 2),
                       ),
-                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                      prefixIcon: Icon(Icons.photo, color: Colors.grey),
                     ),
                   ),
                 ),

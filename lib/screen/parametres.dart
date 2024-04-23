@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Addtrajet.dart';
 import 'Chat/chat1.dart';
@@ -37,6 +38,11 @@ class _parametresState extends State<parametres> {
         Navigator.pushReplacementNamed(context, '/parametres');
         break;
     }
+  }
+  void logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
@@ -151,7 +157,7 @@ class _parametresState extends State<parametres> {
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 25),
             Container(
               width: 240,
               height: 41,
@@ -193,7 +199,7 @@ class _parametresState extends State<parametres> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 25),
             Container(
               width: 240,
               height: 41,
@@ -235,7 +241,7 @@ class _parametresState extends State<parametres> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 25),
             Container(
               width: 240,
               height: 41,
@@ -277,7 +283,7 @@ class _parametresState extends State<parametres> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 25),
             Container(
               width: 240,
               height: 41,
@@ -319,7 +325,7 @@ class _parametresState extends State<parametres> {
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 25),
             Container(
               width: 240,
               height: 41,
@@ -346,6 +352,47 @@ class _parametresState extends State<parametres> {
                 child: Center(
                   child: Text(
                     'About',
+                    style: TextStyle(
+                      fontSize: 16,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black38,
+                          offset: Offset(-5.0, 5.0),
+                        ),
+                      ],
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 25),
+            Container(
+              width: 240,
+              height: 41,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF005573), Color(0xFF00AA9B)],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent, // Rendre la couleur de fond transparente
+                  onPrimary: Colors.white, // Couleur du texte
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                onPressed: () {
+                  logout();
+                },
+                child: Center(
+                  child: Text(
+                    'Déconnexion',
                     style: TextStyle(
                       fontSize: 16,
                       shadows: [

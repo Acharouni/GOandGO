@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'package:get/get.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decode/jwt_decode.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 
 class home extends StatefulWidget {
@@ -12,6 +16,7 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
+  late String firstName = '';
   int _pageIndex = 0;
   void _navigateToPage(int index) {
     setState(() {
@@ -35,7 +40,24 @@ class _homeState extends State<home> {
         break;
     }
   }
+  void initState() {
+    super.initState();
+    _loadUserInfo();
 
+  }
+  Future<void> _loadUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    debugPrint('decodedToken : $token');
+
+    if (token != null) {
+      Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+      setState(() {
+        firstName = decodedToken['firstName'] ?? '';
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +167,7 @@ class _homeState extends State<home> {
                             text: "Ça fait plaisir de vous revoir ",
                           ),
                           TextSpan(
-                            text: "Aymen !",
+                            text: '${firstName.isNotEmpty ? firstName : ''} !',
                             style: TextStyle(
                               color:
                                   Color(0xFFF04641), // Couleur rouge pour "Go"

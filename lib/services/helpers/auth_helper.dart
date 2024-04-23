@@ -1,22 +1,25 @@
-/*import 'dart:convert';
+import 'dart:convert';
 
 import 'package:http/http.dart' as https;
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:go_and_go/models/request/auth/login_model.dart';
 import 'package:go_and_go/models/request/auth/profile_model.dart';
 
 import 'package:go_and_go/models/response/auth/login_res.dart';
-import 'package:go_and_go/models/response/auth/profile_model.dart';
+
 import 'package:go_and_go/services/config.dart';
+
+import '../../models/request/auth/login_model.dart';
+
+
 
 class AuthHelper {
   static var client = https.Client();
 
-  static Future<bool> login(LoginModel model) async {
+  static Future<bool> login(LoginModelReq model) async {
     Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
 
-    var url = Uri.https(Config.apiUrl, Config.loginUrl);
+    var url = Uri.http(Config.apiUrl, Config.loginUrl);
     var response = await client.post(
       url,
       headers: requestHeaders,
@@ -26,13 +29,11 @@ class AuthHelper {
     if (response.statusCode == 200) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      String token = loginResponseModelFromJson(response.body).userToken;
-      String userId = loginResponseModelFromJson(response.body).id;
-      String profile = loginResponseModelFromJson(response.body).profile;
+      String token = loginResponseModelFromJson(response.body).jwtToken;
+      
 
       await prefs.setString('token', token);
-      await prefs.setString('userId', userId);
-      await prefs.setString('profile', profile);
+   
       await prefs.setBool('loggedIn', true);
 
       return true;
@@ -42,5 +43,5 @@ class AuthHelper {
   }
 
 
+
 }
-*/

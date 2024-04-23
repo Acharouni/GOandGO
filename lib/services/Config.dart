@@ -1,6 +1,7 @@
 class Config {
-  static const apiUrl = "http://localhost:3000";
+  static const apiUrl = "10.0.2.2:3000";
   static const String loginUrl = "/user/authenticate";
+  static const String profileUrl = "/user/authenticate";
   static const String confirmMail = "/user/confirm/";
 
   static const String addDemand = "/demand/add/";
