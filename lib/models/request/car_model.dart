@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-CarModel carModelFromJson(String str) => CarModel.fromJson(json.decode(str));
+CarModelReq carModelReqFromJson(String str) => CarModelReq.fromJson(json.decode(str));
 
-String carModelToJson(CarModel data) => json.encode(data.toJson());
+String carModelReqToJson(CarModelReq data) => json.encode(data.toJson());
 
-class CarModel {
+class CarModelReq {
   final int power;
   final String brand;
   final String serialNumber;
   final String photo;
 
-  CarModel({
+  CarModelReq({
     required this.power,
     required this.brand,
     required this.serialNumber,
     required this.photo,
   });
 
-  factory CarModel.fromJson(Map<String, dynamic> json) => CarModel(
+  factory CarModelReq.fromJson(Map<String, dynamic> json) => CarModelReq(
     power: json["power"],
     brand: json["brand"],
     serialNumber: json["serialNumber"],
