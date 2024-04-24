@@ -3,10 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'package:get/get.dart';
+import 'package:go_and_go/screen/addTrajit.dart';
+import 'package:go_and_go/screen/trajet.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
+import '../controllers/Cars_provider.dart';
+import '../models/response/Car_Modelresp.dart';
 import 'Regster2.dart';
 
 
@@ -62,6 +67,10 @@ class _homeState extends State<home> {
   }
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<CarNotifier>(
+        create: (_) => CarNotifier(),
+        child: Consumer<CarNotifier>(
+        builder: (context, carNotifier, child) {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -253,7 +262,9 @@ class _homeState extends State<home> {
           ],
         ),
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       floatingActionButton: Container(
         margin: const EdgeInsets.only(top: 10),
         height: 64,
@@ -261,7 +272,35 @@ class _homeState extends State<home> {
         child: FloatingActionButton(
           backgroundColor: Colors.white.withOpacity(0.5),
           elevation: 0,
-          onPressed: () => Get.offAll(resgstertwo()),
+          onPressed: ()  {
+            try {
+
+              if (carNotifier.getCar() != null) {
+                // Afficher un snackbar si aucune voiture n'est disponible
+                Get.snackbar(
+                  "Aucune voiture",
+                  "Veuillez ajouter une voiture",
+                  backgroundColor: Colors.white38,
+                  icon: const Icon(Icons.bookmark_add),
+                );
+                // Naviguer vers la page pour ajouter une voiture
+                Get.offAll(resgstertwo()); // Remplacez RegisterTwo() par votre classe de page addCar
+              } else {
+                // Naviguer vers la page pour ajouter une trajit
+                Get.offAll(addtrajit()); // Remplacez AddTrajit() par votre classe de page addTrajit
+              }
+            } catch (e) {
+
+              // Gérer les erreurs éventuelles ici
+              print("Erreur lors de la récupération des détails de la voiture : $e");
+              Get.snackbar(
+                "Erreur",
+                "Une erreur s'est produite. Veuillez réessayer.",
+                backgroundColor: Colors.red,
+                icon: const Icon(Icons.error),
+              );
+            }
+          },
           shape: StarBorder.polygon(
             sides: 6,
             side: const BorderSide(width: 2, color: Colors.white),
@@ -281,6 +320,9 @@ class _homeState extends State<home> {
         pageIndex: _pageIndex,
         onTap: _navigateToPage,
       ),
+    );
+        },
+        ),
     );
   }
 }

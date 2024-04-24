@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'package:go_and_go/screen/parametres.dart';
 
-import 'Addtrajet.dart';
+import 'trajet.dart';
 import 'home.dart';
 
 class groupe extends StatefulWidget {

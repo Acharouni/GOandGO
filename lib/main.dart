@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_and_go/screen/Addtrajet.dart';
+import 'package:go_and_go/screen/trajet.dart';
 import 'package:go_and_go/screen/Regster1.dart';
 import 'package:go_and_go/screen/Regster2.dart';
 import 'package:go_and_go/screen/Regster3.dart';
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
       home: defaultHome,
       routes: {
         '/home': (context) => home(),
-        '/addtrajet': (context) => addtrajet(),
+        '/addtrajet': (context) => trajet(),
         '/groupe': (context) => groupe(),
         '/parametres': (context) => parametres(),
         '/savelive': (context) => savelife(),

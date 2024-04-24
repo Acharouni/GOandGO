@@ -31,12 +31,12 @@ class CarHelper extends ChangeNotifier {
   }
 
 
-  static Future<CarModelResp> getCars() async {
+  static Future<CarModelResp> getCars(String jwtToken) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
-      'token': 'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
 
     var url = Uri.http(Config.apiUrl, Config.getCar);
@@ -49,10 +49,35 @@ class CarHelper extends ChangeNotifier {
       var car = carModelRespFromJson(response.body);
       return car;
     } else {
-      throw Exception("Failed to get the jobs");
+      throw Exception("Failed to get the Car");
     }
   }
 
+  static Future<void> deleteCar(int carId, String jwtToken) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    try {
+      Map<String, String> requestHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+
+      var url = Uri.http(Config.apiUrl, '/cars/$carId');
+      var response = await client.delete(
+        url,
+        headers: requestHeaders,
+      );
+
+      if (response.statusCode == 200) {
+        print('Car deleted successfully');
+      } else {
+        throw Exception('Failed to delete car');
+      }
+    } catch (e) {
+      print('Error deleting car: $e');
+      throw Exception('Failed to delete car');
+    }
+  }
 
 }
 

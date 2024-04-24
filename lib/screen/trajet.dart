@@ -7,14 +7,14 @@ import 'groupe.dart';
 import 'home.dart';
 
 
-class addtrajet extends StatefulWidget {
-  const addtrajet({Key? key}) : super(key: key);
+class trajet extends StatefulWidget {
+  const trajet({Key? key}) : super(key: key);
 
   @override
-  State<addtrajet> createState() => _addtrajetState();
+  State<trajet> createState() => _trajetState();
 }
 
-class _addtrajetState extends State<addtrajet> {
+class _trajetState extends State<trajet> {
   int _pageIndex = 1;
   void _navigateToPage(int index) {
     setState(() {

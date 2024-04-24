@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Addtrajet.dart';
+import 'trajet.dart';
+import 'Cars.dart';
 import 'Chat/chat1.dart';
 import 'groupe.dart';
 import 'home.dart';
@@ -16,6 +19,28 @@ class parametres extends StatefulWidget {
 }
 
 class _parametresState extends State<parametres> {
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+
+  }
+  late String firstName = '';
+  late String lastName =' ' ;
+  Future<void> _loadUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    debugPrint('decodedToken : $token');
+
+    if (token != null) {
+      Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+      setState(() {
+        firstName = decodedToken['firstName'] ?? '';
+        lastName = decodedToken['lastName'] ?? '';
+      });
+    }
+  }
+
   int _pageIndex = 3;
   void _navigateToPage(int index) {
     setState(() {
@@ -144,7 +169,7 @@ class _parametresState extends State<parametres> {
                     height: 55,
                   ),
                   Text(
-                    'Aymen Charouni',
+                    '${firstName.isNotEmpty ? firstName : ''} ''${lastName.isNotEmpty ? lastName : ''} ',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -222,6 +247,7 @@ class _parametresState extends State<parametres> {
                 onPressed: () {
                   // Action à exécuter lorsque le bouton "Commencer" est pressé
                   print('Commencer button pressed');
+                  Get.offAll(Car());
                 },
                 child: Center(
                   child: Text(
@@ -263,7 +289,7 @@ class _parametresState extends State<parametres> {
                 ),
                 onPressed: () {
                   // Action à exécuter lorsque le bouton "Commencer" est pressé
-                  print('Commencer button pressed');
+
                 },
                 child: Center(
                   child: Text(
