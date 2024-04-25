@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_and_go/screen/addTrajit.dart';
 import 'package:go_and_go/screen/trajet.dart';
 import 'package:go_and_go/screen/Regster1.dart';
 import 'package:go_and_go/screen/Regster2.dart';
@@ -16,8 +17,9 @@ import 'package:provider/provider.dart';
 
 
 import 'controllers/Cars_provider.dart';
+import 'controllers/Trajit_provider.dart';
 import 'controllers/login_provider.dart';
- Widget defaultHome = const splashScreen();
+ Widget defaultHome = const addtrajit();
 
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (context) => LoginNotifier()),
       ChangeNotifierProvider(create: (context) => CarNotifier()),
+      ChangeNotifierProvider(create: (context) => TrajitNotifier()),
     ],
     child: const MyApp(),
   ));

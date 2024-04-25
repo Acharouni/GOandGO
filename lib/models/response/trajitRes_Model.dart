@@ -9,10 +9,11 @@ class TrajitModelRes {
   final String startLocation;
   final String finalDestination;
   final int numberOfSeats;
-  final DateTime goingOffTime;
+  final String goingOffTime;
   final bool femaleOnly;
   final int consumption;
   final Creator creator;
+  final String day;
 
   TrajitModelRes({
     required this.id,
@@ -23,6 +24,7 @@ class TrajitModelRes {
     required this.femaleOnly,
     required this.consumption,
     required this.creator,
+    required this.day,
   });
 
   factory TrajitModelRes.fromJson(Map<String, dynamic> json) => TrajitModelRes(
@@ -30,10 +32,11 @@ class TrajitModelRes {
     startLocation: json["startLocation"],
     finalDestination: json["finalDestination"],
     numberOfSeats: json["numberOfSeats"],
-    goingOffTime: DateTime.parse(json["goingOffTime"]),
+    goingOffTime: json["goingOffTime"],
     femaleOnly: json["femaleOnly"],
     consumption: json["consumption"],
     creator: Creator.fromJson(json["creator"]),
+    day: json["day"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -41,10 +44,11 @@ class TrajitModelRes {
     "startLocation": startLocation,
     "finalDestination": finalDestination,
     "numberOfSeats": numberOfSeats,
-    "goingOffTime": goingOffTime.toIso8601String(),
+    "goingOffTime": goingOffTime,
     "femaleOnly": femaleOnly,
     "consumption": consumption,
     "creator": creator.toJson(),
+    "day": day,
   };
 }
 

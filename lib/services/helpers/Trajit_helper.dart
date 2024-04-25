@@ -8,8 +8,11 @@ import '../Config.dart';
 import 'package:go_and_go/models/response/Car_Modelresp.dart';
 
 class TrajitHalper extends ChangeNotifier {
+
+
   static var client = http.Client();
-  static Future<TrajitModelReq> addRide(int userId, TrajitModelReq ride) async {
+
+  static Future<TrajitModelReq> addRides(int userId, TrajitModelReq ride) async {
     final String apiUrl = '10.0.2.2:3000/ride/add/$userId';
     final response = await http.post(
       Uri.parse(apiUrl),

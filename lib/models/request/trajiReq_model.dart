@@ -10,7 +10,8 @@ class TrajitModelReq {
   final int numberOfSeats;
   final bool femaleOnly;
   final int consumption;
-  final int goingOffTime;
+  final String goingOffTime;
+  final String day;
 
   TrajitModelReq({
     required this.startLocation,
@@ -19,6 +20,7 @@ class TrajitModelReq {
     required this.femaleOnly,
     required this.consumption,
     required this.goingOffTime,
+    required this.day,
   });
 
   factory TrajitModelReq.fromJson(Map<String, dynamic> json) => TrajitModelReq(
@@ -28,6 +30,7 @@ class TrajitModelReq {
     femaleOnly: json["femaleOnly"],
     consumption: json["consumption"],
     goingOffTime: json["goingOffTime"],
+    day: json["day"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -37,5 +40,6 @@ class TrajitModelReq {
     "femaleOnly": femaleOnly,
     "consumption": consumption,
     "goingOffTime": goingOffTime,
+    "day": day,
   };
 }
