@@ -67,7 +67,7 @@ class CarNotifier extends ChangeNotifier {
       String? token = prefs.getString('token');
       if (token != null) {
         List<CarModelResp> cars = (await CarHelper.getCars(token))
-            as List<CarModelResp>; // Assuming getCars returns a list of cars
+        as List<CarModelResp>; // Assuming getCars returns a list of cars
         bool userHasCars = cars.isNotEmpty;
         return userHasCars;
       }
@@ -121,28 +121,28 @@ class CarNotifier extends ChangeNotifier {
     }
   }
 
- Future<bool> aCar() async {
-  try {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+  Future<bool> aCar() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
 
-    if (token != null) {
-      CarModelResp? car = await CarHelper.getCars(token);
+      if (token != null) {
+        CarModelResp? car = await CarHelper.getCars(token);
 
-      if (car != null) {
-        return true; // User has a car
+        if (car != null) {
+          return true; // User has a car
+        } else {
+          return false; // User does not have a car
+        }
       } else {
-        return false; // User does not have a car
+        throw Exception("Token not found");
       }
-    } else {
-      throw Exception("Token not found");
+    } catch (e) {
+      print('Error checking car status: $e');
+      // Handle the error (e.g., log, show error message)
+      return false; // Return false in case of any error
     }
-  } catch (e) {
-    print('Error checking car status: $e');
-    // Handle the error (e.g., log, show error message)
-    return false; // Return false in case of any error
   }
-}
 
   Future<void> deleteCar(int carId, String jwtToken) async {
     try {

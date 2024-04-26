@@ -10,6 +10,7 @@ import '../models/request/car_model.dart';
 import '../models/request/trajiReq_model.dart';
 import '../models/response/Car_Modelresp.dart';
 
+import '../models/response/trajitRes_Model.dart';
 import '../services/helpers/Trajit_helper.dart';
 import '../services/helpers/car_helper.dart';
 
@@ -51,15 +52,13 @@ class TrajitNotifier extends ChangeNotifier {
   }
 
 
-
-
   late Future<List<TrajitModelReq>> trajituser;
 
   List<TrajitModelReq> _trajit = [];
+
   List<TrajitModelReq> get trajit => _trajit;
 
   final TrajitFormKey = GlobalKey<FormState>();
-
 
 
   bool validateAndSave() {
@@ -72,14 +71,15 @@ class TrajitNotifier extends ChangeNotifier {
       return false;
     }
   }
-  addRide(int userID,TrajitModelReq model) {
-    TrajitHalper.addRides(userID,model).then((response) {
-      if (response==200) {
+
+  addRide(int userID, TrajitModelReq model) {
+    TrajitHalper.addRides(userID, model).then((response) {
+      if (response == 200) {
         Get.snackbar(
             "car successfully added", "Please Check y",
 
             icon: const Icon(Icons.safety_check));
-      } else if (response!=200) {
+      } else if (response != 200) {
         Get.snackbar("", "Please Check",
 
             backgroundColor: Colors.red,
@@ -87,6 +87,7 @@ class TrajitNotifier extends ChangeNotifier {
       }
     });
   }
+
   Future<CarModelResp> getTrajiByid() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -97,5 +98,15 @@ class TrajitNotifier extends ChangeNotifier {
       throw Exception("Token not found");
     }
   }
+
+ /* Future<List<TrajitModelRes>> getallTraji() async {
+
+
+    if (http.Response==200) {
+      return await TrajitHalper.getAllRides();
+    } else {
+      throw Exception("conection failed");
+    }
+  }*/
 
 }

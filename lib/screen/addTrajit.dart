@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:go_and_go/models/request/trajiReq_model.dart';
+import 'package:go_and_go/screen/trajet.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../location_service.dart';
 import 'home.dart';
+import 'Cars.dart';
 import '../controllers/Trajit_provider.dart';
-
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 class addtrajit extends StatefulWidget {
   const addtrajit({Key? key}) : super(key: key);
 
@@ -14,14 +20,103 @@ class addtrajit extends StatefulWidget {
 }
 
 class _addtrajitState extends State<addtrajit> {
-  final TextEditingController startLocation = TextEditingController();
-  final TextEditingController finalDestination = TextEditingController();
+  Completer<GoogleMapController> _controller = Completer();
+  String day ='';
+
+
+
+  final TextEditingController _originController = TextEditingController();
+  final TextEditingController _destinationController = TextEditingController();
+  final TextEditingController goingOffTime = TextEditingController();
   final TextEditingController numberOfSeats = TextEditingController();
-  final TextEditingController photo = TextEditingController();
-  late String userId = '';
+  final TextEditingController femaleOnly = TextEditingController();
+  final TextEditingController consumption = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _originController.dispose();
+    _destinationController.dispose();
+    goingOffTime.dispose();
+    numberOfSeats.dispose();
+    femaleOnly.dispose();
+    consumption.dispose();
+
+    super.dispose();
+  }
+
+  Set<Marker> _markers = Set<Marker>();
+  Set<Polygon> _polygons = Set<Polygon>();
+  Set<Polyline> _polylines = Set<Polyline>();
+  List<LatLng> polygonLatLngs = <LatLng>[];
+
+  int _polygonIdCounter = 1;
+  int _polylineIdCounter = 1;
+
+  void _setMarker(LatLng point) {
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId('marker'),
+          position: point,
+        ),
+      );
+    });
+  }
+
+  void _setPolygon() {
+    final String polygonIdVal = 'polygon_$_polygonIdCounter';
+    _polygonIdCounter++;
+
+    _polygons.add(
+      Polygon(
+        polygonId: PolygonId(polygonIdVal),
+        points: polygonLatLngs,
+        strokeWidth: 2,
+        fillColor: Colors.transparent,
+      ),
+    );
+  }
+
+  void _setPolyline(List<PointLatLng> points) {
+    final String polylineIdVal = 'polyline_$_polylineIdCounter';
+    _polylineIdCounter++;
+
+    _polylines.add(
+      Polyline(
+        polylineId: PolylineId(polylineIdVal),
+        width: 2,
+        color: Colors.blue,
+        points: points
+            .map(
+              (point) => LatLng(point.latitude, point.longitude),
+        )
+            .toList(),
+      ),
+    );
+  }
+
+
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static const CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
+
+  @override
+
+
+
+  late int userId;
   void initState() {
     super.initState();
     _loadUserInfo();
+    _setMarker(LatLng(36.8485046, 10.2691834));
   }
 
   Future<void> _loadUserInfo() async {
@@ -33,7 +128,7 @@ class _addtrajitState extends State<addtrajit> {
     if (token != null) {
       Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
       setState(() {
-        userId = decodedToken['firstName'] ?? '';
+        userId = decodedToken['user'] ?? '';
       });
     }
   }
@@ -90,7 +185,7 @@ class _addtrajitState extends State<addtrajit> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(height: 75),
+                    SizedBox(height: 23),
                     Form(
                       key: trajitNotifier.TrajitFormKey,
                       child: Column(
@@ -98,7 +193,7 @@ class _addtrajitState extends State<addtrajit> {
                           Container(
                             width: 311,
                             child: TextFormField(
-                              //controller: _password,
+                              controller:_originController,
                               style: TextStyle(color: Colors.black),
                               //obscureText: loginNotifier.obscureText,
                               validator: (value) {
@@ -115,7 +210,7 @@ class _addtrajitState extends State<addtrajit> {
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20,
                                     vertical:
-                                        16), // Ajuster la taille du champ de saisie
+                                    16), // Ajuster la taille du champ de saisie
                                 filled: true,
                                 fillColor: Color(0xFFFCFFFD),
                                 hintStyle: TextStyle(color: Colors.grey),
@@ -126,15 +221,20 @@ class _addtrajitState extends State<addtrajit> {
                                       color: Color(0xFFFCFFFD), width: 2),
                                 ),
                                 prefixIcon:
-                                    Icon(Icons.location_on, color: Colors.red),
+                                Icon(Icons.location_on, color: Colors.red),
+
                               ),
+
                             ),
                           ),
                           SizedBox(height: 10),
                           Container(
                             width: 311,
                             child: TextFormField(
-                              //controller: _email,
+                              controller: _destinationController ,
+                              onChanged:(value){
+                                print(value);
+                              },
                               style: TextStyle(color: Colors.black),
                               validator: (value) {
                                 if (value!.isEmpty) {
@@ -147,10 +247,11 @@ class _addtrajitState extends State<addtrajit> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
+
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20,
                                     vertical:
-                                        16), // Ajuster la taille du champ de saisie
+                                    16), // Ajuster la taille du champ de saisie
                                 filled: true,
                                 fillColor: Color(0xFFFCFFFD),
                                 hintStyle: TextStyle(color: Colors.grey),
@@ -161,11 +262,49 @@ class _addtrajitState extends State<addtrajit> {
                                       color: Color(0xFFFCFFFD), width: 2),
                                 ),
                                 prefixIcon:
-                                    Icon(Icons.location_on, color: Colors.blue),
+                                Icon(Icons.location_on, color: Colors.blue),
+                                suffixIcon:
+                                IconButton( onPressed: () async {
+                                  var directions = await LocationService().getDirections(
+                                    _originController.text.toString(),
+                                    _destinationController.text.toString(),
+                                  );
+                                  _goToPlace(
+                                    directions['start_location']['lat'],
+                                    directions['start_location']['lng'],
+                                    directions['bounds_ne'],
+                                    directions['bounds_sw'],
+                                  );
+
+                                  _setPolyline(directions['polyline_decoded']);
+                                }, icon: Icon(Icons.search, color: Colors.red),),
                               ),
                             ),
                           ),
-                          SizedBox(height: 150),
+
+                          SizedBox(height: 10),
+                          Container(
+                            height: 350,
+                            child: GoogleMap(
+                              mapType: MapType.normal,
+                              markers: _markers,
+                              polygons: _polygons,
+                              polylines: _polylines,
+                              initialCameraPosition: _kGooglePlex,
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller.complete(controller);
+                              },
+                              onTap: (point) {
+                                setState(() {
+                                  polygonLatLngs.add(point);
+                                  _setPolygon();
+                                });
+                              },
+                            ),
+
+
+                          ),
+                          SizedBox(height: 10),
                           Container(
                             width: 355,
                             decoration: ShapeDecoration(
@@ -203,14 +342,15 @@ class _addtrajitState extends State<addtrajit> {
                                         color: isTodaySelected
                                             ? Color(0xFF00AA9B)
                                             : Color(
-                                                0x33000000), // Couleur de fond du bouton "Modifier"
+                                            0x33000000), // Couleur de fond du bouton "Modifier"
                                       ),
                                       child: TextButton(
                                         onPressed: () {
                                           setState(() {
+                                            day ='Today';
                                             isTomorrowSelected = false;
                                             isTodaySelected =
-                                                !isTodaySelected; // Toggle state
+                                            !isTodaySelected; // Toggle state
                                           });
                                         },
                                         child: Text(
@@ -237,15 +377,16 @@ class _addtrajitState extends State<addtrajit> {
                                         color: isTomorrowSelected
                                             ? Color(0xFF00AA9B)
                                             : Color(
-                                                0x33000000), // Couleur de fond du bouton "Modifier"
+                                            0x33000000), // Couleur de fond du bouton "Modifier"
                                       ),
                                       child: TextButton(
                                         onPressed: () {
                                           setState(() {
+                                             day ='Tomorrow';
                                             isTomorrowSelected =
-                                                !isTomorrowSelected;
+                                            !isTomorrowSelected;
                                             isTodaySelected =
-                                                false; // Toggle state
+                                            false; // Toggle state
                                           });
                                         },
                                         child: Text(
@@ -261,7 +402,7 @@ class _addtrajitState extends State<addtrajit> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 20),
+                                SizedBox(height: 10),
                                 Column(
                                   children: [
                                     Row(
@@ -284,7 +425,7 @@ class _addtrajitState extends State<addtrajit> {
                                           height: 40,
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(16),
+                                            BorderRadius.circular(16),
                                             color: Color(
                                                 0xFF00AA9B), // Couleur de fond du bouton "Modifier"
                                           ),
@@ -299,14 +440,14 @@ class _addtrajitState extends State<addtrajit> {
                                                 labelText: 'Select Time',
                                                 border: InputBorder.none,
                                                 suffixIcon:
-                                                    Icon(Icons.access_time),
+                                                Icon(Icons.access_time),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 20),
+
                                     Row(
                                       children: [
                                         Icon(Icons.group_add_rounded,
@@ -321,36 +462,36 @@ class _addtrajitState extends State<addtrajit> {
                                                 0xFF00AA9B), // Couleur par défaut du texte
                                           ),
                                         ),
-                                       Container(
-  padding: const EdgeInsets.all(10.0),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      
-    // Add spacing between elements
-      IconButton(
-        icon: Icon(Icons.remove),
-        onPressed: _decrementCounter,
-      ),
-      
-      Text(
-        '$_counter',
-        style: TextStyle(fontSize: 16),
-      ),
-      IconButton(
-        icon: Icon(Icons.add),
-        onPressed: _incrementCounter,
-      ),
-    ],
-  ),
-),
-                                       SizedBox(height: 20),
+                                        Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+
+                                              // Add spacing between elements
+                                              IconButton(
+                                                icon: Icon(Icons.remove),
+                                                onPressed: _decrementCounter,
+                                              ),
+
+                                              Text(
+                                                '$_counter',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.add),
+                                                onPressed: _incrementCounter,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
 
 
                                       ],
 
                                     ),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: 10),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -416,8 +557,40 @@ class _addtrajitState extends State<addtrajit> {
                                               ),
                                             ),
                                             onPressed: () {
-                                              // Action à exécuter lorsque le bouton "Commencer" est pressé
+                                              if (trajitNotifier.validateAndSave()) {
+                                                TrajitModelReq model = TrajitModelReq(
+                                                  startLocation:_originController.text,
+                                                  finalDestination: _destinationController.text,
+                                                  femaleOnly: false,
+                                                  consumption: 20,
+                                                  goingOffTime:_timeController.text ,
+                                                  day: day,
+                                                  numberOfSeats: _counter,
+                                                );
+                                                trajitNotifier.addRide(userId, model );
+                                                Get.offAll(trajet());
+                                                debugPrint('Car Saved $TrajitModelReq');
 
+                                              } else {
+                                                Get.defaultDialog(
+                                                  title: 'Erreur',
+                                                  middleText:
+                                                  'Le champ Émission de CO2 ne doit pas être vide.',
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                              print(_originController.text);
+                                              print(_destinationController.text);
+                                              print(_timeController.text);
+                                              print(day);
+                                              print(_counter);
                                             },
                                             child: Center(
                                               child: Text(
@@ -439,7 +612,7 @@ class _addtrajitState extends State<addtrajit> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: 10),
                                   ],
                                 ),
                               ],
@@ -529,7 +702,7 @@ class _addtrajitState extends State<addtrajit> {
                               prefixIcon: Icon(Icons.photo, color: Colors.grey),
                             ),
                           ),*/
-                          SizedBox(height: 150),
+                          SizedBox(height: 100),
                           /*Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -584,4 +757,32 @@ class _addtrajitState extends State<addtrajit> {
       ),
     );
   }
+  Future<void> _goToPlace(
+       //Map<String, dynamic> place,
+      double lat,
+      double lng,
+      Map<String, dynamic> boundsNe,
+      Map<String, dynamic> boundsSw,
+      ) async {
+     //final double lat = place['geometry']['location']['lat'];
+    //final double lng = place['geometry']['location']['lng'];
+
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(lat, lng), zoom: 12),
+      ),
+    );
+
+    controller.animateCamera(
+      CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+            southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
+            northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
+          ),
+          25),
+    );
+    _setMarker(LatLng(lat, lng));
+  }
 }
+

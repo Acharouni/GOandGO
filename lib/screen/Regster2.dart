@@ -239,7 +239,7 @@ class _resgstertwoState extends State<resgstertwo> {
                                     Get.defaultDialog(
                                       title: 'Erreur',
                                       middleText:
-                                          'Le champ Émission de CO2 ne doit pas être vide.',
+                                      'Le champ Émission de CO2 ne doit pas être vide.',
                                       actions: [
                                         TextButton(
                                           onPressed: () {

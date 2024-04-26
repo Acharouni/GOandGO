@@ -12,7 +12,6 @@ import 'package:go_and_go/services/config.dart';
 import '../../models/request/auth/login_model.dart';
 
 
-
 class AuthHelper {
   static var client = https.Client();
 
@@ -33,7 +32,7 @@ class AuthHelper {
       print(token);
 
       await prefs.setString('token', token);
-   
+
       await prefs.setBool('loggedIn', true);
 
       return true;
@@ -41,7 +40,4 @@ class AuthHelper {
       return false;
     }
   }
-
-
-
 }
