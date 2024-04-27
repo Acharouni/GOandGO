@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_and_go/controllers/Trajit_provider.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../NavBar/nav_bar.dart';
+import '../controllers/demande_provider.dart';
 import '../models/response/trajitRes_Model.dart';
 import '../services/helpers/Trajit_helper.dart';
 
@@ -14,6 +17,26 @@ class test extends StatefulWidget {
 }
 
 class _testState extends State<test> {
+  late int userId;
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+
+  }
+
+  Future<void> _loadUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    debugPrint('decodedToken : $token');
+
+    if (token != null) {
+      Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+      setState(() {
+        userId = decodedToken['user'] ?? '';
+      });
+    }
+  }
   int _pageIndex = 2;
   void _navigateToPage(int index) {
     setState(() {
@@ -90,6 +113,7 @@ class _testState extends State<test> {
                                 width: 35,
                                 height: 39,
                                 decoration: BoxDecoration(
+
                                   // Définir la décoration de votre premier conteneur ici
                                 ),
                                 child: Image.asset(
@@ -130,7 +154,7 @@ class _testState extends State<test> {
                         } else if (snapshot.hasData) {
                           List<TrajitModelRes> rideList = snapshot.data!;
                           return Container(
-                            height: 500,
+                            height: 600,
                             width: 360,
 
 
@@ -139,6 +163,7 @@ class _testState extends State<test> {
                               itemBuilder: (context, index) {
                                 TrajitModelRes trajit = rideList[index];
                                 return Container(
+
                                   padding: EdgeInsets.all(8),
                                   margin: EdgeInsets.symmetric(vertical: 8),
                                   decoration: BoxDecoration(
@@ -146,21 +171,153 @@ class _testState extends State<test> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text('De : ${trajit.startLocation} à ${trajit.finalDestination}'),
-                                      SizedBox(height: 8),
-                                      Text('Nombre de sièges : ${trajit.numberOfSeats}'),
-                                      SizedBox(height: 8),
-                                      Text('Heure de départ : ${trajit.goingOffTime}'),
-                                      SizedBox(height: 8),
-                                      Text('Jour : ${trajit.day}'),
-                                      SizedBox(height: 8),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+
+                                          Image.asset(
+                                            'assets/img/profil.png',
+                                            fit: BoxFit.contain,
+                                            width: 72,
+                                            height: 55,
+                                          ),
+                                          Text(' ${trajit.creator.firstName}  ${trajit.creator.lastName}',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.07,
+                                            ),),
+                                        ],
+                                      ),
+                                      SizedBox(height: 30),
+                                      Row(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text('De ',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.07,
+                                                ),),
+                                              Text('${trajit.startLocation} ',
+                                                style: TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.07,
+                                                ),),
+                                              Text('à ',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.07,
+                                                ),),
+                                              Text(' ${trajit.finalDestination}',
+                                                style: TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.07,
+                                                ),),
+                                            ],
+                                          ),
+                                          SizedBox(width: 20),
+                                          Row(
+                                            children: [
+                                              Text('Places :',
+                                                style: TextStyle(
+                                                  color: Color(0xffFFFFFF),
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.07,
+                                                ),),
+                                              Text(' ${trajit.numberOfSeats}',
+                                                style: TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.07,
+                                                ),),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 25 ),
+                                      Row(
+                                        children: [
+                                          Text('Jour :',
+                                            style: TextStyle(
+                                              color: Color(0xffFFFFFF),
+                                              fontSize: 16,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.07,
+                                            ),),
+                                          Text('${trajit.day} ',
+                                            style: TextStyle(
+                                              color: Colors.redAccent,
+                                              fontSize: 16,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.07,
+                                            ),),
+                                        ],
+                                      ),
+                                      SizedBox(height: 25),
+                                      Row(
+                                        children: [
+                                          Text('Heure : ',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.07,
+                                            ),),
+                                          Text('${trajit.goingOffTime}',
+                                            style: TextStyle(
+                                              color: Colors.redAccent,
+                                              fontSize: 16,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.07,
+                                            ),),
+                                        ],
+                                      ),
+
                                       TextButton(
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Color(
+                                              0xFF00AA9B),
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.all(12.0),
+                                          textStyle: const TextStyle(fontSize: 16),
+                                        ),
                                         onPressed: () {
-                                          // Action lorsque le bouton est cliqué
+                                          /*DemandeNotifier.addDemand(userId, rideId).then((DemandeReq) {
+                                            // La demande a été ajoutée avec succès
+                                            // Vous pouvez mettre à jour l'interface utilisateur ou effectuer d'autres actions nécessaires
+                                          }).catchError((error) {
+                                            // Une erreur s'est produite lors de l'ajout de la demande
+                                            // Vous pouvez afficher un message d'erreur ou gérer l'erreur de manière appropriée
+                                            print('Erreur lors de l\'ajout de la demande: $error');
+                                          });*/
                                         },
-                                        child: Text('Supprimer'),
+                                        child: Text('Demande',),
+
                                       ),
                                     ],
                                   ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_and_go/screen/Chat/chat_list_screen.dart';
 import 'package:go_and_go/screen/addTrajit.dart';
+
 import 'package:go_and_go/screen/test.dart';
 import 'package:go_and_go/screen/trajet.dart';
 import 'package:go_and_go/screen/Regster1.dart';
@@ -15,13 +17,15 @@ import 'package:go_and_go/screen/parametres.dart';
 import 'package:go_and_go/screen/savelife.dart';
 import 'package:go_and_go/screen/splash_screen.dart';
 import 'package:go_and_go/screen/startScreen.dart';
+import 'package:go_and_go/testmaps.dart';
 import 'package:provider/provider.dart';
 
 
 import 'controllers/Cars_provider.dart';
 import 'controllers/Trajit_provider.dart';
+import 'controllers/chat_provider.dart';
 import 'controllers/login_provider.dart';
- Widget defaultHome =  test();
+ Widget defaultHome =  splashScreen();
 
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +44,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => LoginNotifier()),
       ChangeNotifierProvider(create: (context) => CarNotifier()),
       ChangeNotifierProvider(create: (context) => TrajitNotifier()),
+      ChangeNotifierProvider(create: (context) => ChatProvider()),
     ],
     child: const MyApp(),
   ));
@@ -60,10 +65,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => home(),
         '/addtrajet': (context) => trajet(),
-        '/groupe': (context) => groupe(),
+        '/groupe': (context) => test(),
         '/parametres': (context) => parametres(),
         '/savelive': (context) => savelife(),
-        '/chat1': (context) => chat1(),
+        '/chat1': (context) => ChatListScreen(),
         '/login': (context) => loginScreen(),
         '/start': (context) => startScreen(),
       },

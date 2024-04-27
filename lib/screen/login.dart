@@ -29,6 +29,7 @@ class _loginScreenState extends State<loginScreen> {
         extendBody: true,
         body: SingleChildScrollView(
           child: Container(
+            height: 800,
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -48,6 +49,7 @@ class _loginScreenState extends State<loginScreen> {
                       SizedBox(height: 80),
                       Container(
                         width: 343,
+                        height: 600,
                         decoration: ShapeDecoration(
                           color: Colors.white.withOpacity(0.10000000149011612),
                           shape: RoundedRectangleBorder(
@@ -219,14 +221,16 @@ class _loginScreenState extends State<loginScreen> {
                               ],
                             ),
                             SizedBox(height: 20),
+
                             Column(
                               children: [
                                 Container(
-                                  width: 256,
+                                  height: 70,
+                                  width: 300,
                                   child: Image.asset(
                                     'assets/logo/logoinetum.png',
                                     width: 200,
-                                    height: 200,
+                                    height: 300,
                                     fit: BoxFit.contain, // Choose a fit option
                                   ),
                                 ),
