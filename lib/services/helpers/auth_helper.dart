@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as https;
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:go_and_go/models/request/auth/profile_model.dart';
+
 
 import 'package:go_and_go/models/response/auth/login_res.dart';
 

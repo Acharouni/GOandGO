@@ -1,4 +1,4 @@
-class Message {
+/*class Message {
   final int id;
   final String body;
   final User sender;
@@ -43,3 +43,4 @@ class User {
     );
   }
 }
+*/

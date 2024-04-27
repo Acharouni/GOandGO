@@ -25,7 +25,7 @@ import 'controllers/Cars_provider.dart';
 import 'controllers/Trajit_provider.dart';
 import 'controllers/chat_provider.dart';
 import 'controllers/login_provider.dart';
- Widget defaultHome =  splashScreen();
+ Widget defaultHome =  test();
 
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => home(),
         '/addtrajet': (context) => trajet(),
-        '/groupe': (context) => test(),
+        '/groupe': (context) => groupe(),
         '/parametres': (context) => parametres(),
         '/savelive': (context) => savelife(),
         '/chat1': (context) => ChatListScreen(),

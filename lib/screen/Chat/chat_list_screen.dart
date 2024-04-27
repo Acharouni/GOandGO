@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controllers/chat_provider.dart';
 import '../../models/Convertation.dart';
+import '../home.dart';
 import 'chat_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
@@ -47,7 +49,21 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chats'),
+        title: Row(
+            children: [
+        IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Get.offAll(home());
+        },
+        color: Colors.black,
+      ),
+      Text(
+        'Chat',
+        style: TextStyle(
+          color: Colors.black, // set the color of the title text
+        ),
+      ),]),
       ),
       body: userId != null
           ? FutureBuilder<List<Convertation>>(
@@ -100,8 +116,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                             children: [
                               Text(
                                 conversation.secondUser.id == userId
-                                    ? conversation.firstUser.firstName
-                                    : conversation.secondUser.firstName,
+                                    ? '${conversation.firstUser.firstName} ${conversation.firstUser.lastName}'
+                                    : '${conversation.secondUser.firstName} ${conversation.secondUser.lastName}',
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4),

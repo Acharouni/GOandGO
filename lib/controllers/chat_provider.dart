@@ -95,5 +95,23 @@ class ChatProvider with ChangeNotifier {
       throw Exception('Failed to send message');
     }
   }
+ getSelectedConversation(int conversationId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final url = Uri.parse('http://10.0.2.2:3000/conversation/getSelectedConversation/$conversationId');
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+
+      return Convertation.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to fetch messages');
+    }
+  }
 
 }
