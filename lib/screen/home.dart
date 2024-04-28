@@ -13,6 +13,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import '../controllers/Cars_provider.dart';
 import '../models/response/Car_Modelresp.dart';
 import 'Regster2.dart';
+import 'groupe.dart';
 
 class home extends StatefulWidget {
   const home({Key? key}) : super(key: key);
@@ -219,7 +220,8 @@ class _homeState extends State<home> {
                                 ),
                               ),
                               onPressed: () {
-                                // Actions à exécuter lorsque le bouton est pressé
+                                Get.offAll(groupe());
+
                               },
                               child: Center(
                                 child: Row(

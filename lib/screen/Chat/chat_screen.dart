@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? firstName;
   String? lastName;
   late ChatProvider chatProvider;
-  late List<Message> messages;
+  List<Message> messages = []; // Initialisation de la liste messages
 
   Timer? _timer;
 
@@ -52,6 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _loadMessages();
     _startMessageRefreshTimer();
   }
+
 
   @override
   void dispose() {
@@ -73,11 +74,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (token != null) {
       Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
-      setState(() {
-        userId = decodedToken['user'] as int;
-        firstName = decodedToken['firstName'] as String;
-        lastName = decodedToken['lastName'] as String;
-      });
+      userId = decodedToken['user'] as int;
+      firstName = decodedToken['firstName'] as String;
+      lastName = decodedToken['lastName'] as String;
     }
   }
 
@@ -92,7 +91,7 @@ class _ChatScreenState extends State<ChatScreen> {
           messages.add(Message(
             id: event['id'],
             body: event['message'],
-            createdAt:  DateTime.now().toString(),
+            createdAt: DateTime.now().toString(),
             conversation: chatProvider.getSelectedConversation(widget.conversationId),
             sender: User(
               id: event['senderId'],
@@ -125,7 +124,6 @@ class _ChatScreenState extends State<ChatScreen> {
       print('Error: ${e.toString()}');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controllers/Cars_provider.dart';
+import 'Regster2.dart';
+import 'addTrajit.dart';
 import 'trajet.dart';
 import 'Cars.dart';
 import 'Chat/chat1.dart';
@@ -72,6 +76,10 @@ class _parametresState extends State<parametres> {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<CarNotifier>(
+      create: (_) => CarNotifier(),
+      child: Consumer<CarNotifier>(
+        builder: (context, carNotifier, child) {
     return  Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -446,7 +454,35 @@ class _parametresState extends State<parametres> {
         child: FloatingActionButton(
           backgroundColor: Colors.white.withOpacity(0.5),
           elevation: 0,
-          onPressed: () => debugPrint("Add Button pressed"),
+          onPressed: () async {
+            bool hasCar = await carNotifier.aCar();
+            print(hasCar);
+
+            try {
+              if (hasCar) {
+                Get.offAll(addtrajit());
+              } else {
+                Get.snackbar(
+                  "Aucune voiture",
+                  "Veuillez ajouter une voiture",
+                  backgroundColor: Colors.white38,
+                  icon: const Icon(Icons.bookmark_add),
+                );
+                Get.offAll(resgstertwo());
+              }
+            } catch (e) {
+
+              print(
+                  "Erreur lors de la récupération des détails de la voiture : $e");
+              Get.snackbar(
+                "Erreur",
+                "Une erreur s'est produite. Veuillez réessayer.",
+                backgroundColor: Colors.red,
+                icon: const Icon(Icons.error),
+              );
+            }
+
+          },
 
           shape: StarBorder.polygon(
             sides: 6,
@@ -472,6 +508,9 @@ class _parametresState extends State<parametres> {
 
 
     );
+  },
+  ),
+  );
 
   }
 }

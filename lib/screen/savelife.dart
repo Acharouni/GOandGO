@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'package:go_and_go/NavBar/nav_bar_backup.dart';
+import 'package:provider/provider.dart';
+
+import '../controllers/Cars_provider.dart';
+import '../controllers/consumtion_provider.dart';
+import '../models/consumepation.dart';
+import 'Regster2.dart';
+import 'addTrajit.dart';
 class savelife extends StatefulWidget {
   const savelife({Key? key}) : super(key: key);
 
@@ -34,6 +42,14 @@ class _savelifeState extends State<savelife> {
   }
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ConsumptionProvider>(
+      create: (_) => ConsumptionProvider(),
+      child: Consumer<ConsumptionProvider>(
+        builder: (context, ConsumptionProvider, child) {
+    return ChangeNotifierProvider<CarNotifier>(
+      create: (_) => CarNotifier(),
+      child: Consumer<CarNotifier>(
+        builder: (context, carNotifier, child) {
     return  Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -104,9 +120,133 @@ class _savelifeState extends State<savelife> {
                     ),
                   ],
                 )),
-            SizedBox(height: 25),
 
-            SizedBox(height: 30),
+            FutureBuilder(
+              future: Future.wait([
+                ConsumptionProvider.getTopThreeSavedConsumers(),
+                ConsumptionProvider.getTotalConsumptionSaved(),
+              ]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  List<ConsumptionModel> topThreeConsumers = snapshot.data![0] as List<ConsumptionModel>;
+                  int totalConsumptionSaved = snapshot.data![1] as int;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10),
+                      Column(
+                         children:[Text(
+                          'Top 3 Saved Consumers',
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF00AA9B),
+                          ),
+                        ),],
+                      ),
+                      Container(
+                        width: 400,
+                        height: 400,
+                        child: ListView.builder(
+                          itemCount: topThreeConsumers.length,
+                          itemBuilder: (context, index) {
+                            ConsumptionModel consumer = topThreeConsumers[index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 6.0,
+                              ),
+                              child: Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Color(0xFF005573),
+                                        child: Text(
+                                          '${consumer.firstName[0]}${consumer.lastName[0]}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.0),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${consumer.firstName} ${consumer.lastName}',
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 2.0),
+                                            Text(
+                                              'Consumption Expected: ${consumer.consumptionExpected}',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  'Total Consumption Saved :',
+                                  style: TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(
+                                        0xFF00AA9B),
+                                  ),
+                                ),
+                                Text(
+                                  '$totalConsumptionSaved',
+                                  style: TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(
+                                        0xFF26DA0A),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
 
           ],
         ),
@@ -119,7 +259,35 @@ class _savelifeState extends State<savelife> {
         child: FloatingActionButton(
           backgroundColor: Colors.white.withOpacity(0.5),
           elevation: 0,
-          onPressed: () => debugPrint("Add Button pressed"),
+          onPressed: () async {
+            bool hasCar = await carNotifier.aCar();
+            print(hasCar);
+
+            try {
+              if (hasCar) {
+                Get.offAll(addtrajit());
+              } else {
+                Get.snackbar(
+                  "Aucune voiture",
+                  "Veuillez ajouter une voiture",
+                  backgroundColor: Colors.white38,
+                  icon: const Icon(Icons.bookmark_add),
+                );
+                Get.offAll(resgstertwo());
+              }
+            } catch (e) {
+
+              print(
+                  "Erreur lors de la récupération des détails de la voiture : $e");
+              Get.snackbar(
+                "Erreur",
+                "Une erreur s'est produite. Veuillez réessayer.",
+                backgroundColor: Colors.red,
+                icon: const Icon(Icons.error),
+              );
+            }
+
+          },
           shape: StarBorder.polygon(
             sides: 6,
             side: const BorderSide(width: 2, color: Colors.white),
@@ -140,5 +308,11 @@ class _savelifeState extends State<savelife> {
         onTap: _navigateToPage,
       ),
     );
+  },
+  ),
+  );
+  },
+  ),
+  );
   }
 }

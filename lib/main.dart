@@ -25,7 +25,7 @@ import 'controllers/Cars_provider.dart';
 import 'controllers/Trajit_provider.dart';
 import 'controllers/chat_provider.dart';
 import 'controllers/login_provider.dart';
- Widget defaultHome =  test();
+ Widget defaultHome =  splashScreen();
 
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();

@@ -59,7 +59,11 @@ class _CarState extends State<Car> {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         // Gérer les erreurs de chargement des données
-                        return Center(child: Text('Erreur de chargement : ${snapshot.error}'));
+                        return Center(child: Text('Aucune voiture disponible (-_-)', style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF00AA9B),
+                        ),));
                       } else if (snapshot.hasData) {
                         // Afficher les détails de la voiture une fois les données chargées
                         CarModelResp car = snapshot.data!;

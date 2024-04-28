@@ -50,12 +50,15 @@ class TrajitHalper extends ChangeNotifier {
   }
 
   Future<TrajitModelReq> updateRide(TrajitModelReq ride, int rideId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
     final String apiUrl = '10.0.2.2:3000/ride/update/$rideId';
 
     final response = await http.put(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(ride.toJson()), // Assurez-vous que Ride a une méthode toJson() pour le sérialiser en JSON
     );

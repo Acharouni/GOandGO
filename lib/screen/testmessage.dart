@@ -1,186 +1,147 @@
-/*import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:go_and_go/models/chat_model.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../controllers/chat_provider.dart';
+import '../controllers/consumtion_provider.dart';
+import '../models/consumepation.dart';
 
-class ChatScreen extends StatefulWidget {
-  final int conversationId;
 
-  ChatScreen({required this.conversationId});
-
+class ConsumptionPage extends StatefulWidget {
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ConsumptionPageState createState() => _ConsumptionPageState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
-  TextEditingController _controller = TextEditingController();
-  late int userId;
-  String? firstName;
-  String? lastName;
-  late ChatProvider chatProvider;
-  late List<Message> messages;
-
-  Future<void> _loadUserInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-
-    debugPrint('decodedToken : $token');
-
-    if (token != null) {
-      Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
-      setState(() {
-        userId = decodedToken['user'] as int;
-        firstName = decodedToken['firstName'] as String;
-        lastName = decodedToken['lastName'] as String;
-      });
-    }
-  }
-
-  Future<void> _loadMessages() async {
-    try {
-      final pusher = PusherChannelsFlutter();
-      await pusher.init(apiKey: "fabd281453b94b3c02f6", cluster: "eu");
-      await pusher.connect();
-
-      void onEvent(dynamic event) {
-        setState(() {
-          messages.add(Message(
-            id: event['id'],
-            body: event['message'],
-            createdAt: DateTime.now().toString(),
-            conversation: chatProvider.getSelectedConversation(widget.conversationId),
-            sender: User(
-              id: event['senderId'],
-              firstName: event['senderFirstName'],
-              lastName: event['senderLastName'],
-              active: true,
-              consumptionExpected: 0,
-              dateCompte: DateTime.now().toString(),
-              email: "abc@inetum.com",
-              gender: "Male",
-              mdp: "123456",
-              phone: 8545111,
-              role: 0,
-              verified: 1,
-            ),
-          ));
-        });
-      }
-
-      await pusher.subscribe(
-        channelName: widget.conversationId.toString(),
-        onEvent: onEvent,
-      );
-
-      await chatProvider.fetchMessages(widget.conversationId);
-      setState(() {
-        messages = chatProvider.messages;
-      });
-    } catch (e) {
-      print('Error: ${e.toString()}');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserInfo();
-    chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    _loadMessages();
-  }
-
+class _ConsumptionPageState extends State<ConsumptionPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Chat')),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                return Row(
-                  mainAxisAlignment: message.sender.id == userId
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
-                  children: [
-                    if (message.sender.id != userId)
-                      CircleAvatar(
-                        radius: 20,
+    return ChangeNotifierProvider(
+      create: (_) => ConsumptionProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Consumption Statistics'),
+          backgroundColor: Color(0xFF005573),
+        ),
+        body: Consumer<ConsumptionProvider>(
+          builder: (context, consumptionProvider, child) {
+            return FutureBuilder(
+              future: Future.wait([
+                consumptionProvider.getTopThreeSavedConsumers(),
+                consumptionProvider.getTotalConsumptionSaved(),
+              ]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  List<ConsumptionModel> topThreeConsumers = snapshot.data![0] as List<ConsumptionModel>;
+                  int totalConsumptionSaved = snapshot.data![1] as int;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
                         child: Text(
-                          '${message.sender.firstName[0]}${message.sender.lastName[0]}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    SizedBox(width: 8),
-                    Flexible(
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: message.sender.id == userId
-                              ? Colors.blue
-                              : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          message.body,
+                          'Top 3 Saved Consumers',
                           style: TextStyle(
-                            color: message.sender.id == userId
-                                ? Colors.white
-                                : Colors.black,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF005573),
                           ),
                         ),
                       ),
-                    ),
-                    if (message.sender.id == userId)
-                      CircleAvatar(
-                        radius: 20,
-                        child: Text(
-                          '${firstName![0]}${lastName![0]}',
-                          style: TextStyle(color: Colors.white),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: topThreeConsumers.length,
+                          itemBuilder: (context, index) {
+                            ConsumptionModel consumer = topThreeConsumers[index];
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: Color(0xFF005573),
+                                        child: Text(
+                                          '${consumer.firstName[0]}${consumer.lastName[0]}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 16.0),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${consumer.firstName} ${consumer.lastName}',
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.0),
+                                            Text(
+                                              'Consumption Expected: ${consumer.consumptionExpected}',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    SizedBox(width: 8),
-                  ],
-                );
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total Consumption Saved',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF005573),
+                              ),
+                            ),
+                            Text(
+                              '$totalConsumptionSaved',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF005573),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
               },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(hintText: 'Type a message'),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    chatProvider.sendMessage(
-                      userId, // senderId,
-                      widget.conversationId,
-                      _controller.text,
-                    );
-                    _controller.clear();
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }
 }
-*/

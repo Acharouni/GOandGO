@@ -1,13 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_and_go/controllers/Trajit_provider.dart';
+import 'package:go_and_go/screen/login.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../NavBar/nav_bar.dart';
+import '../controllers/Cars_provider.dart';
 import '../controllers/demande_provider.dart';
 import '../models/response/trajitRes_Model.dart';
 import '../services/helpers/Trajit_helper.dart';
+import 'Regster2.dart';
+import 'addTrajit.dart';
 
 class groupe extends StatefulWidget {
   const groupe({Key? key}) : super(key: key);
@@ -63,6 +70,10 @@ class _groupeState extends State<groupe> {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<CarNotifier>(
+      create: (_) => CarNotifier(),
+      child: Consumer<CarNotifier>(
+        builder: (context, carNotifier, child) {
     return ChangeNotifierProvider<TrajitNotifier>(
       create: (_) => TrajitNotifier(),
       child: Consumer<TrajitNotifier>(
@@ -156,8 +167,6 @@ class _groupeState extends State<groupe> {
                           return Container(
                             height: 600,
                             width: 360,
-
-
                             child: ListView.builder(
                               itemCount: rideList.length,
                               itemBuilder: (context, index) {
@@ -307,7 +316,49 @@ class _groupeState extends State<groupe> {
                                           textStyle: const TextStyle(fontSize: 16),
                                         ),
                                         onPressed: () {
-
+                                          Provider.of<DemandeNotifier>(context, listen: false).addDemand(userId, trajit.creator.id)
+                                              .then((demandeReq) {
+                                            // La demande a été ajoutée avec succès
+                                            // Affichez une popup pour informer l'utilisateur
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text('Demande envoyée avec succès'),
+                                                  content: Text('Votre demande a été enregistrée.'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          })
+                                              .catchError((error) {
+                                            // Une erreur s'est produite lors de l'ajout de la demande
+                                            // Affichez une popup d'erreur
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text('Erreur'),
+                                                  content: Text('Une erreur s\'est produite lors de l\'ajout de la demande.'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          });
                                         },
                                         child: Text('Demande',),
 
@@ -320,10 +371,12 @@ class _groupeState extends State<groupe> {
                           );
 
                         } else {
-                          return Center(child: Text('Aucune donnée de voiture disponible'));
+                          return Center(child: Text('pas de Covoiturage',));
+
                         }
                       },
                     ),
+
                     SizedBox(height: 200),
 
                   ],
@@ -338,7 +391,35 @@ class _groupeState extends State<groupe> {
               child: FloatingActionButton(
                 backgroundColor: Colors.white.withOpacity(0.5),
                 elevation: 0,
-                onPressed: () => debugPrint("Add Button pressed"),
+                onPressed: () async {
+                  bool hasCar = await carNotifier.aCar();
+                  print(hasCar);
+
+                  try {
+                    if (hasCar) {
+                      Get.offAll(addtrajit());
+                    } else {
+                      Get.snackbar(
+                        "Aucune voiture",
+                        "Veuillez ajouter une voiture",
+                        backgroundColor: Colors.white38,
+                        icon: const Icon(Icons.bookmark_add),
+                      );
+                      Get.offAll(resgstertwo());
+                    }
+                  } catch (e) {
+
+                    print(
+                        "Erreur lors de la récupération des détails de la voiture : $e");
+                    Get.snackbar(
+                      "Erreur",
+                      "Une erreur s'est produite. Veuillez réessayer.",
+                      backgroundColor: Colors.red,
+                      icon: const Icon(Icons.error),
+                    );
+                  }
+
+                },
 
                 shape: StarBorder.polygon(
                   sides: 6,
@@ -366,6 +447,9 @@ class _groupeState extends State<groupe> {
         },
       ),
     );
+  },
+  ),
+  );
 
   }
 }
