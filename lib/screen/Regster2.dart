@@ -197,7 +197,7 @@ class _resgstertwoState extends State<resgstertwo> {
                           Container(
                             width: 150,
                             height: 100,
-                            child: TextFormField(
+                            /*child: TextFormField(
                               controller: photo,
                               style: TextStyle(color: Colors.black),
                               validator: (value) {
@@ -223,7 +223,7 @@ class _resgstertwoState extends State<resgstertwo> {
                                 ),
                                 prefixIcon: Icon(Icons.photo, color: Colors.grey),
                               ),
-                            ),
+                            ),*/
                           ),
                           SizedBox(height: 16),
                           Row(
@@ -296,7 +296,7 @@ class _resgstertwoState extends State<resgstertwo> {
                                         power: int.parse(power.text),
                                         brand: brand.text,
                                         serialNumber: serialNumber.text,
-                                        photo: photo.text,
+                                        photo: "photo",
                                       );
                                       carNotifier.addCar(model);
                                       debugPrint('Car Saved $CarModelReq');

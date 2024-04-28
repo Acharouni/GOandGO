@@ -149,7 +149,7 @@ class _groupeState extends State<groupe> {
                                         width: 48,
                                         height: 48,
                                         child: Image.asset(
-                                          'assets/img/arcticons_verizon-messages.png',
+                                          'assets/img/msg.png',
                                           width: 48,
                                           height: 48,
                                           fit: BoxFit.contain,
@@ -167,9 +167,21 @@ class _groupeState extends State<groupe> {
                                       return Center(
                                           child: CircularProgressIndicator());
                                     } else if (snapshot.hasError) {
-                                      return Center(
-                                          child: Text(
-                                              'Erreur de chargement : ${snapshot.error}'));
+                                      return Center(child: Column(
+                                        children: [
+                                          Text('Aucune donnee disponible ', style: TextStyle(
+                                            fontSize: 24.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF00AA9B),
+                                          ),),
+                                          Image.asset(
+                                            'assets/img/Carsimage2.png',
+                                            width: 298,
+                                            height: 300,
+                                            fit: BoxFit.contain, // Choose a fit option
+                                          ),
+                                        ],
+                                      ));
                                     } else if (snapshot.hasData) {
                                       List<TrajitModelRes> rideList =
                                           snapshot.data!;

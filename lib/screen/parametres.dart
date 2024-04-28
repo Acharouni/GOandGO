@@ -143,7 +143,7 @@ class _parametresState extends State<parametres> {
                         width: 48,
                         height: 48,
                         child: Image.asset(
-                          'assets/img/arcticons_verizon-messages.png',
+                          'assets/img/msg.png',
                           width: 48,
                           height: 48,
                           fit: BoxFit.contain,

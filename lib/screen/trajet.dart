@@ -159,7 +159,7 @@ class _trajetState extends State<trajet> {
                         width: 48,
                         height: 48,
                         child: Image.asset(
-                          'assets/img/arcticons_verizon-messages.png',
+                          'assets/img/msg.png',
                           width: 48,
                           height: 48,
                           fit: BoxFit.contain,
@@ -181,11 +181,21 @@ class _trajetState extends State<trajet> {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   // Gérer les erreurs de chargement des données
-                  return Center(child: Text('Aucune donnee disponible (-_-)', style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF00AA9B),
-                  ),));
+                  return Center(child: Column(
+                    children: [
+                      Text('Aucune donnee disponible ', style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF00AA9B),
+                      ),),
+                      Image.asset(
+                        'assets/img/Carsimage2.png',
+                        width: 298,
+                        height: 300,
+                        fit: BoxFit.contain, // Choose a fit option
+                      ),
+                    ],
+                  ));
                 } else if (snapshot.hasData) {
                   // Afficher les détails de la voiture une fois les données chargées
                   TrajitModelRes rides = snapshot.data!;
