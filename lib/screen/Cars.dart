@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_and_go/controllers/Cars_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/response/Car_Modelresp.dart';
+import '../services/helpers/car_helper.dart';
 import 'home.dart';
 
 class Car extends StatefulWidget {
@@ -14,6 +16,7 @@ class Car extends StatefulWidget {
 }
 
 class _CarState extends State<Car> {
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CarNotifier>(
@@ -128,8 +131,13 @@ class _CarState extends State<Car> {
                                     color: Colors.white, // Couleur de fond du bouton "Supprimer"
                                   ),
                                   child: TextButton(
-                                    onPressed: () {
-                                      carNotifier.deleteCar(car.id, 'votre_jwt_token');
+                                    onPressed: () async {
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      String? token = prefs.getString('token');
+
+                                      debugPrint('decodedToken : $token');
+                                      print(car.id);
+                                      CarHelper.deleteCar(car.id, '$token');
                                       Get.offAll(home());
                                     },
                                     child: Text(
@@ -180,7 +188,7 @@ class _CarState extends State<Car> {
                       },
                       child: Center(
                         child: Text(
-                          'Retuour',
+                          'Retour',
                           style: TextStyle(
                             fontSize: 16,
                             shadows: [

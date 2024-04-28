@@ -62,7 +62,7 @@ class CarHelper extends ChangeNotifier {
         'Authorization': 'Bearer $token'
       };
 
-      var url = Uri.http(Config.apiUrl, '/cars/$carId');
+      var url = Uri.http(Config.apiUrl, '/deleteCar/$carId');
       var response = await client.delete(
         url,
         headers: requestHeaders,

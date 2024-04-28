@@ -138,20 +138,32 @@ class _savelifeState extends State<savelife> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 10),
+
                       Column(
-                         children:[Text(
-                          'Top 3 Saved Consumers',
-                          style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF00AA9B),
-                          ),
-                        ),],
+                         children:[Column(
+                           children: [
+                             Text(
+                              'Top 3 ',
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF00AA9B),
+                              ),
+                        ),
+                             Text(
+                               'Consommateurs économisés',
+                               style: TextStyle(
+                                 fontSize: 24.0,
+                                 fontWeight: FontWeight.bold,
+                                 color: Color(0xFF00AA9B),
+                               ),
+                             ),
+                           ],
+                         ),],
                       ),
                       Container(
                         width: 400,
-                        height: 400,
+                        height: 390,
                         child: ListView.builder(
                           itemCount: topThreeConsumers.length,
                           itemBuilder: (context, index) {
@@ -194,7 +206,7 @@ class _savelifeState extends State<savelife> {
                                             ),
                                             SizedBox(height: 2.0),
                                             Text(
-                                              'Consumption Expected: ${consumer.consumptionExpected}',
+                                              'Consommation prévue: ${consumer.consumptionExpected}',
                                               style: TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.grey[600],
@@ -212,16 +224,16 @@ class _savelifeState extends State<savelife> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Column(
                               children: [
                                 Text(
-                                  'Total Consumption Saved :',
+                                  'Consommation totale économisée :',
                                   style: TextStyle(
-                                    fontSize: 24.0,
+                                    fontSize: 20.0,
                                     fontWeight: FontWeight.bold,
                                     color: Color(
                                         0xFF00AA9B),

@@ -11,6 +11,7 @@ import '../models/request/trajiReq_model.dart';
 import '../models/response/Car_Modelresp.dart';
 
 import '../models/response/trajitRes_Model.dart';
+import '../services/Config.dart';
 import '../services/helpers/Trajit_helper.dart';
 import '../services/helpers/car_helper.dart';
 
@@ -82,31 +83,116 @@ class TrajitNotifier extends ChangeNotifier {
       } else if (response != 200) {
         Get.snackbar("", "Please Check",
 
-            backgroundColor: Colors.red,
+            backgroundColor: Color(0x74FFFFFF),
             icon: const Icon(Icons.bookmark_add));
       }
     });
   }
 
-  Future<CarModelResp> getTrajiByid() async {
+  static var client = http.Client();
+
+  Future<TrajitModelReq> updateRide(TrajitModelReq ride, int rideId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:3000/ride/update/$rideId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(ride.toJson()),
+    );
 
-    if (token != null) {
-      return await CarHelper.getCars(token);
+    if (response.statusCode == 200) {
+      return TrajitModelReq.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Token not found");
+      throw Exception('Failed to update ride');
     }
   }
 
- /* Future<List<TrajitModelRes>> getallTraji() async {
 
 
-    if (http.Response==200) {
-      return await TrajitHalper.getAllRides();
-    } else {
-      throw Exception("conection failed");
+  Future<void> deleteRide(int id) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    try {
+      Map<String, String> requestHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+
+
+      var url = Uri.http(Config.apiUrl, '/ride/delete/$id');
+      var response = await client.delete(
+        url,
+        headers: requestHeaders,
+      );
+
+      if (response.statusCode == 200) {
+        print('Car deleted successfully');
+      } else {
+        throw Exception('Failed to delete car');
+      }
+    } catch (e) {
+      print('Error deleting car: $e');
+      throw Exception('Failed to delete car');
     }
-  }*/
+  }
+
+  static Future<List<TrajitModelRes>> getAllRidesForTodayAndTomorrow() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final String apiUrl = 'http://10.0.2.2:3000/ride/getAllRidesForTodayAndTomorrow';
+    // Replace with your API endpoint
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+
+        },
+        // Assurez-vous que Ride a une méthode toJson() pour le sérialiser en JSON
+      );
+
+      if (response.statusCode == 200) {
+        // Convert the JSON response into a list of TrajitModelRes objects
+        List<dynamic> rideListJson = jsonDecode(response.body);
+        List<TrajitModelRes> rideList = rideListJson
+            .map((json) => TrajitModelRes.fromJson(json))
+            .toList();
+        return rideList;
+      } else {
+        throw Exception('Failed to load rides: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
+  Future<TrajitModelRes> getRideById(int rideId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final String apiUrl = 'http://10.0.2.2:3000/ride/get/$rideId';
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+
+      },
+      // Assurez-vous que Ride a une méthode toJson() pour le sérialiser en JSON
+    );
+
+    if (response.statusCode == 200) {
+      // Si la requête est réussie, renvoyer le trajet récupéré depuis la réponse
+      return TrajitModelRes.fromJson(jsonDecode(response.body));
+    } else {
+      // Gérer les erreurs en cas d'échec de la requête
+      throw Exception('Échec de la récupération du trajet');
+    }
+  }
+
 
 }
+

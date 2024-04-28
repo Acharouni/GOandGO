@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_and_go/NavBar/nav_bar.dart';
 import 'package:go_and_go/screen/parametres.dart';
 import 'package:get/get.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controllers/Cars_provider.dart';
+import '../controllers/Trajit_provider.dart';
+import '../controllers/demande_provider.dart';
+import '../models/response/DemandeRes.dart';
+import '../models/response/trajitRes_Model.dart';
+import 'Chat/chat_list_screen.dart';
 import 'Regster2.dart';
 import 'addTrajit.dart';
 import 'groupe.dart';
@@ -19,6 +26,33 @@ class trajet extends StatefulWidget {
 }
 
 class _trajetState extends State<trajet> {
+  late int userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  Future<void> _loadUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    debugPrint('decodedToken : $token');
+
+    if (token != null) {
+      Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+      setState(() {
+        userId = decodedToken['user'] ?? 0; // Assurez-vous que la valeur par défaut est compatible avec le type de userId
+      });
+    } else {
+      // Gérer le cas où le jeton est null
+      // Par exemple, vous pourriez rediriger l'utilisateur vers l'écran de connexion
+    }
+  }
+// Rest of your code...
+
+
   int _pageIndex = 1;
   void _navigateToPage(int index) {
     setState(() {
@@ -45,6 +79,14 @@ class _trajetState extends State<trajet> {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<DemandeNotifier>(
+        create: (_) => DemandeNotifier(),
+        child: Consumer<DemandeNotifier>(
+        builder: (context, demandeNotifier, child) {
+    return ChangeNotifierProvider<TrajitNotifier>(
+        create: (_) => TrajitNotifier(),
+        child: Consumer<TrajitNotifier>(
+        builder: (context, trajitNotifier, child) {
     return ChangeNotifierProvider<CarNotifier>(
         create: (_) => CarNotifier(),
         child: Consumer<CarNotifier>(
@@ -68,7 +110,12 @@ class _trajetState extends State<trajet> {
 
         ),
       ),
-      body: Container(
+      body: SingleChildScrollView(
+    child: Column(
+    children: [
+      Container(
+
+        height: 1000,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -122,12 +169,247 @@ class _trajetState extends State<trajet> {
                   ],
                 )
             ),
+
             SizedBox(height: 25),
 
+            FutureBuilder<TrajitModelRes>(
+
+              future: trajitNotifier.getRideById(userId), // Appeler la méthode pour récupérer une voiture
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Afficher un indicateur de chargement pendant le chargement des données
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  // Gérer les erreurs de chargement des données
+                  return Center(child: Text('Aucune donnee disponible (-_-)', style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF00AA9B),
+                  ),));
+                } else if (snapshot.hasData) {
+                  // Afficher les détails de la voiture une fois les données chargées
+                  TrajitModelRes rides = snapshot.data!;
+                  return Container(
+                    width: 323,
+                    height: 170,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Card(
+                      elevation: 4.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'De ${rides.startLocation} à ${rides.finalDestination}',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              'Le ${rides.day} à ${rides.goingOffTime}',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            SizedBox(height: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Logique pour modifier le trajet
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFF005573),
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  child: Text('Modifier'),
+                                ),
+                                SizedBox(width: 8.0),
+                                ElevatedButton(
+
+                                  onPressed: () {
+
+                                    trajitNotifier.deleteRide(rides.id);
+                                    Get.offAll(trajet());
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                  child: Text('Supprimer'),
+                                ),
+                              ],
+                            ),
+
+
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Center(
+                      child: Text('Aucune donnée  disponible'));
+                }
+              },
+            ),
+            Container(
+              width: 323,
+              height: 400,
+              child:  FutureBuilder<List<DemandeRes>>(
+                future: DemandeNotifier
+                    .getAllDemandsForTheRideCreator(userId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                        child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                        child: Text(
+                            'Erreur de chargement : ${snapshot.error}'));
+                  } else if (snapshot.hasData) {
+                    print(userId);
+                    List<DemandeRes> demList =
+                    snapshot.data!;
+                    return Container(
+                      height: 600,
+                      width: 360,
+                      child: ListView.builder(
+                        itemCount: demList.length,
+                        itemBuilder: (context, index) {
+                          DemandeRes demand =
+                          demList[index];
+                          return Container(
+                            padding: EdgeInsets.all(8),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.grey),
+                              borderRadius:
+                              BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: [
+                                 Card(
+                                  elevation: 4.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Demande de la part du',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${demand.user.firstName} ${demand.user.lastName}',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8.0),
+                                        Text(
+                                          'Statut : ${demand.status}',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                        SizedBox(height: 16.0),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                // Logique pour accepter la demande
+                                                DemandeNotifier.changeDemandStatus(demand.id, 'Accepted');
+                                                Get.offAll(ChatListScreen());
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFF005573),
+                                                onPrimary: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ),
+                                              ),
+                                              child: Text('Accepter'),
+                                            ),
+                                            SizedBox(width: 8.0),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                DemandeNotifier.changeDemandStatus(demand.id, 'Refused');
+                                                Get.offAll(trajet());
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.red,
+                                                onPrimary: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                ),
+                                              ),
+                                              child: Text('Refuser'),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return Center(
+                        child: Text(
+                          'pas de Covoiturage',
+                        ));
+                  }
+                },
+              ),
+            ),
 
           ],
         ),
       ),
+          ],
+          ),
+          ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
         margin: const EdgeInsets.only(top: 10),
@@ -190,6 +472,12 @@ class _trajetState extends State<trajet> {
 
 
 
+    );
+        },
+        ),
+    );
+        },
+        ),
     );
         },
     ),

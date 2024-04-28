@@ -35,19 +35,7 @@ class TrajitHalper extends ChangeNotifier {
     }
   }
 
-  Future<TrajitModelReq> getRideById(int rideId) async {
-    final String apiUrl = '10.0.2.2:3000/ride/get/$rideId';
 
-    final response = await http.get(Uri.parse(apiUrl));
-
-    if (response.statusCode == 200) {
-      // Si la requête est réussie, renvoyer le trajet récupéré depuis la réponse
-      return TrajitModelReq.fromJson(jsonDecode(response.body));
-    } else {
-      // Gérer les erreurs en cas d'échec de la requête
-      throw Exception('Échec de la récupération du trajet');
-    }
-  }
 
   Future<TrajitModelReq> updateRide(TrajitModelReq ride, int rideId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
